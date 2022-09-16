@@ -1,10 +1,15 @@
 package org.example.Server;
 
-import java.io.DataInputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
-    public static void main(String[] args) {
+    private ServerSocket server;
+    private final ConcurrentHashMap<Socket, Client> clients = new ConcurrentHashMap<>();
+    public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.out.println("Need [Port]");
             return;
@@ -12,25 +17,29 @@ public class Server {
         var server = new Server();
         server.start(Integer.parseInt(args[0]));
     }
-    public void start(int port) {
-        try (
-                var server = new ServerSocket(port);
+    public void start(int port) throws IOException {
+        server = new ServerSocket(port);
+        System.out.println("Server started successfully");
+
+        CompletableFuture.runAsync(this::startListener);
+        for (var client : clients.keySet())
+            clients.get(client).run();
+
+        System.out.println("Server closed successfully");
+    }
+
+    public void startListener() {
+        while (Thread.activeCount() <= 100) {
+            try {
                 var socket = server.accept();
-                var inputStream = socket.getInputStream();
-                var dataInputStream = new DataInputStream(inputStream)
-
-                ) {
-
-            System.out.println("Server started successfully");
-
-            var clientMSG = "";
-
-            while (!clientMSG.equals("stop")) {
-                clientMSG = dataInputStream.readUTF();
-                System.out.println("Client: " + clientMSG);
+                clients.putIfAbsent(socket, new Client(this, socket));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+    }
+
+    public void print(String msg) {
+        System.out.println(msg);
     }
 }
