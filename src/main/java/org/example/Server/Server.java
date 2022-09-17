@@ -22,6 +22,9 @@ public class Server {
         var readerThread = new Thread(new ServerReader(socket));
         var writerThread = new Thread(new ServerWriter(socket));
 
+        readerThread.start();
+        writerThread.start();
+
         while (readerThread.isAlive() && writerThread.isAlive())
             Thread.sleep(5000);
 

@@ -26,6 +26,9 @@ public class Client {
             var readerThread = new Thread(new ClientReader(socket));
             var writerThread = new Thread(new ClientWriter(socket));
 
+            readerThread.start();
+            writerThread.start();
+
             while (readerThread.isAlive() && writerThread.isAlive())
                 Thread.sleep(5000);
 
