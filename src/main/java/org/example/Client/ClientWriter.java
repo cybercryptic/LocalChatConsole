@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class ClientWriter implements Runnable {
+public class ClientWriter {
 
+    private final Client client;
     private final Socket socket;
 
-    public ClientWriter(Socket socket) {
+    public ClientWriter(Client client, Socket socket) {
+        this.client = client;
         this.socket = socket;
     }
 
@@ -18,10 +20,13 @@ public class ClientWriter implements Runnable {
         var dos = new DataOutputStream(socket.getOutputStream());
         var buffReader = new BufferedReader(new InputStreamReader(System.in));
 
-        var msg = "";
-        while (!msg.equals("stop")) {
-            msg = buffReader.readLine();
-            sendMSG(dos, msg);
+        var message = "";
+        while (client.getSession()) {
+            message = buffReader.readLine();
+            if (client.getSession() && !message.isEmpty())
+                System.out.println("Cannot send message!");
+            if (message.equals("stop")) client.setSession(false);
+            sendMSG(dos, message);
         }
 
         buffReader.close();
@@ -33,7 +38,6 @@ public class ClientWriter implements Runnable {
         dos.flush();
     }
 
-    @Override
     public void run() {
         try {
             write();

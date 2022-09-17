@@ -7,9 +7,12 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class ServerWriter implements Runnable {
+
+    private final Server server;
     private final Socket socket;
 
-    public ServerWriter(Socket socket) {
+    public ServerWriter(Server server, Socket socket) {
+        this.server = server;
         this.socket = socket;
     }
 
@@ -17,15 +20,13 @@ public class ServerWriter implements Runnable {
         var dos = new DataOutputStream(socket.getOutputStream());
         var buffReader = new BufferedReader(new InputStreamReader(System.in));
 
-        sendMSG(dos, "Hello client!");
-
         var message = "";
-        while (!message.equals("stop")) {
+        while (server.getSession()) {
             message = buffReader.readLine();
+            if (message.equals("stop")) server.setSession(false);
             sendMSG(dos, message);
         }
 
-        buffReader.close();
         dos.close();
     }
 

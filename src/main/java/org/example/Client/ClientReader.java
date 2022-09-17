@@ -4,26 +4,32 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ClientReader implements Runnable {
+public class ClientReader {
+
+    private final Client client;
     private final Socket socket;
 
-    public ClientReader(Socket socket) {
+    public ClientReader(Client client, Socket socket) {
+        this.client = client;
         this.socket = socket;
     }
 
     private void read() throws IOException {
         var dis = new DataInputStream(socket.getInputStream());
 
-        var msg = "";
-        while (!msg.equals("stop")) {
-            msg = dis.readUTF();
-            System.out.println("Server: " + msg);
+        var message = "";
+        while (client.getSession()) {
+            message = dis.readUTF();
+            if (message.equals("stop")) {
+                System.out.println("Server is disconnected");
+                break;
+            }
+            System.out.println("Server: " + message);
         }
 
         dis.close();
     }
 
-    @Override
     public void run() {
         try {
             read();

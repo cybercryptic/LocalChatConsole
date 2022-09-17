@@ -3,9 +3,12 @@ package org.example.Client;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private String userName;
+    private final AtomicBoolean session = new AtomicBoolean();
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Need: [Username] [Server host] [Port]");
@@ -13,6 +16,7 @@ public class Client {
         }
 
         var client = new Client();
+        client.setSession(true);
         client.setUsername(args[0]);
         client.start(args[1], Integer.parseInt(args[2]));
     }
@@ -23,20 +27,15 @@ public class Client {
 
             sendUsernameToServer(socket);
 
-            var readerThread = new Thread(new ClientReader(socket));
-            var writerThread = new Thread(new ClientWriter(socket));
+            var reader = CompletableFuture.runAsync(() -> new ClientReader(this, socket).run());
+            var writer = CompletableFuture.runAsync(() -> new ClientWriter(this, socket).run());
 
-            readerThread.start();
-            writerThread.start();
-
-            while (readerThread.isAlive() && writerThread.isAlive())
-                Thread.sleep(5000);
+            while (!reader.isDone() || !writer.isDone())
+                waitFor5s();
 
         } catch (IOException e) {
-            waitUntil();
+            waitFor5s();
             start(host, port);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -44,7 +43,7 @@ public class Client {
         new DataOutputStream(socket.getOutputStream()).writeUTF(userName);
     }
 
-    private static void waitUntil() {
+    private void waitFor5s() {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
@@ -54,5 +53,13 @@ public class Client {
 
     public void setUsername(String username) {
         this.userName = username;
+    }
+
+    public boolean getSession() {
+        return session.get();
+    }
+
+    public void setSession(boolean session) {
+        this.session.set(session);
     }
 }
