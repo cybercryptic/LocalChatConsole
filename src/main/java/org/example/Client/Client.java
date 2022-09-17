@@ -1,42 +1,55 @@
 package org.example.Client;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.net.Socket;
 
 public class Client {
+    private String userName;
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Need: [Server host] [Port]");
+        if (args.length != 3) {
+            System.out.println("Need: [Username] [Server host] [Port]");
             return;
         }
+
         var client = new Client();
-        client.start(args[0], Integer.parseInt(args[1]));
+        client.setUsername(args[0]);
+        client.start(args[1], Integer.parseInt(args[2]));
     }
 
     public void start(String host, int port) {
-        try (
-                var socket = new Socket(host, port);
-                var outputStream = socket.getOutputStream();
-                var dataOutputStream = new DataOutputStream(outputStream);
-                var buffReader = new BufferedReader(new InputStreamReader(System.in))
+        try (var socket = new Socket(host, port)) {
+            System.out.println("Connected to server successfully");
 
-                ) {
+            sendUsernameToServer(socket);
 
-            System.out.println("Client started successfully");
+            var readerThread = new Thread(new ClientReader(socket));
+            var writerThread = new Thread(new ClientWriter(socket));
 
-            var clientMSG = "";
+            while (readerThread.isAlive() && writerThread.isAlive())
+                Thread.sleep(5000);
 
-            while (!clientMSG.equals("stop")) {
-                System.out.print("Write: ");
-                clientMSG = buffReader.readLine();
-                dataOutputStream.writeUTF(clientMSG);
-                dataOutputStream.flush();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            waitUntil();
+            start(host, port);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private void sendUsernameToServer(Socket socket) throws IOException {
+        new DataOutputStream(socket.getOutputStream()).writeUTF(userName);
+    }
+
+    private static void waitUntil() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void setUsername(String username) {
+        this.userName = username;
     }
 }
