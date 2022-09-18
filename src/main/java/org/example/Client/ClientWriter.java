@@ -23,7 +23,7 @@ public class ClientWriter {
         var message = "";
         while (client.getSession()) {
             message = buffReader.readLine();
-            if (client.getSession() && !message.isEmpty())
+            if (!client.getSession() && !message.isEmpty())
                 System.out.println("Cannot send message!");
             if (message.equals("stop")) client.setSession(false);
             sendMSG(dos, message);

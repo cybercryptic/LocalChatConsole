@@ -24,11 +24,10 @@ public class Server {
 
         var socket = server.accept();
 
-        var reader = CompletableFuture.runAsync(() -> new ServerReader(this, socket).run());
-        var writer = CompletableFuture.runAsync(() -> new ServerWriter(this, socket).run());
+        CompletableFuture.runAsync(() -> new ServerReader(this, socket).run());
+        CompletableFuture.runAsync(() -> new ServerWriter(this, socket).run());
 
-        while (!reader.isDone() || !writer.isDone())
-            waitFor5s();
+        while (getSession()) waitFor5s();
 
         socket.close();
         server.close();

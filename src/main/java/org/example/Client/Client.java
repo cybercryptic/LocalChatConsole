@@ -27,11 +27,10 @@ public class Client {
 
             sendUsernameToServer(socket);
 
-            var reader = CompletableFuture.runAsync(() -> new ClientReader(this, socket).run());
-            var writer = CompletableFuture.runAsync(() -> new ClientWriter(this, socket).run());
+            CompletableFuture.runAsync(() -> new ClientReader(this, socket).run());
+            CompletableFuture.runAsync(() -> new ClientWriter(this, socket).run());
 
-            while (!reader.isDone() || !writer.isDone())
-                waitFor5s();
+            while (getSession()) waitFor5s();
 
         } catch (IOException e) {
             waitFor5s();
