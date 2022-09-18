@@ -8,6 +8,7 @@ public class ServerReader implements Runnable {
 
     private final Server server;
     private final Socket socket;
+    private String username;
 
     public ServerReader(Server server, Socket socket) {
         this.server = server;
@@ -15,22 +16,45 @@ public class ServerReader implements Runnable {
     }
 
     private void read() throws IOException {
-        var dis = new DataInputStream(socket.getInputStream());
+        var dis = getDis();
 
-        var userName = dis.readUTF();
+        username = getUsername(dis);
 
-        var message = "";
-        while (server.getSession()) {
-            message = dis.readUTF();
-            if (message.equals("stop")) {
-                System.out.println(userName + " disconnected");
-                continue;
-            }
-            System.out.println(userName + ": " + message);
-        }
+        initiateReadSession(dis);
 
         dis.close();
     }
+
+    private void initiateReadSession(DataInputStream dis) throws IOException {
+        var message = "";
+        while (server.getSession()) {
+            message = dis.readUTF();
+            if (stopReceived(message)) break;
+            print(message);
+        }
+    }
+
+    private void print(String message) {
+        System.out.println(username + ": " + message);
+    }
+
+    private boolean stopReceived(String message) {
+        if (message.equals("stop")) {
+            System.out.println(username + " disconnected");
+            return true;
+        }
+
+        return false;
+    }
+
+    private String getUsername(DataInputStream dis) throws IOException {
+        return dis.readUTF();
+    }
+
+    private DataInputStream getDis() throws IOException {
+        return new DataInputStream(socket.getInputStream());
+    }
+
     @Override
     public void run () {
         try {

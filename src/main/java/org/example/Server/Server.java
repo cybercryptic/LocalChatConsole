@@ -2,6 +2,7 @@ package org.example.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,19 +20,28 @@ public class Server {
         server.start(Integer.parseInt(args[0]));
     }
     public void start(int port) throws IOException {
-        var server = new ServerSocket(port);
+        var server = getServer(port);
+
         System.out.println("Server started successfully");
 
         var socket = server.accept();
 
-        CompletableFuture.runAsync(() -> new ServerReader(this, socket).run());
-        CompletableFuture.runAsync(() -> new ServerWriter(this, socket).run());
+        startReaderNWriter(socket);
 
-        while (getSession()) waitFor5s();
+        waitUntilSessionEnds();
 
+        close(server, socket);
+
+        System.out.println("Server closed successfully");
+    }
+
+    private void close(ServerSocket server, Socket socket) throws IOException {
         socket.close();
         server.close();
-        System.out.println("Server closed successfully");
+    }
+
+    private void waitUntilSessionEnds() {
+        while (getSession()) waitFor5s();
     }
 
     private void waitFor5s() {
@@ -40,6 +50,15 @@ public class Server {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void startReaderNWriter(Socket socket) {
+        CompletableFuture.runAsync(() -> new ServerReader(this, socket).run());
+        CompletableFuture.runAsync(() -> new ServerWriter(this, socket).run());
+    }
+
+    private ServerSocket getServer(int port) throws IOException {
+        return new ServerSocket(port);
     }
 
     public void setSession(boolean session) {

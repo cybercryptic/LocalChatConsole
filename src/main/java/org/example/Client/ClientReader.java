@@ -15,19 +15,37 @@ public class ClientReader {
     }
 
     private void read() throws IOException {
-        var dis = new DataInputStream(socket.getInputStream());
+        var dis = getDis();
 
+        initiateReadSession(dis);
+
+        dis.close();
+    }
+
+    private void initiateReadSession(DataInputStream dis) throws IOException {
         var message = "";
         while (client.getSession()) {
             message = dis.readUTF();
-            if (message.equals("stop")) {
-                System.out.println("Server is disconnected");
-                break;
-            }
-            System.out.println("Server: " + message);
+            applyFilters(message);
+            print(message);
         }
+    }
 
-        dis.close();
+    private static void print(String message) {
+        System.out.println("Server: " + message);
+    }
+
+    private void applyFilters(String message) throws IOException {
+        if (message.equals("stop")) {
+            System.out.println("Server is disconnected");
+            client.setSession(false);
+            socket.close();
+            System.exit(0);
+        }
+    }
+
+    private DataInputStream getDis() throws IOException {
+        return new DataInputStream(socket.getInputStream());
     }
 
     public void run() {

@@ -10,6 +10,8 @@ public class ClientWriter {
 
     private final Client client;
     private final Socket socket;
+    private DataOutputStream dos;
+    private BufferedReader buffReader;
 
     public ClientWriter(Client client, Socket socket) {
         this.client = client;
@@ -17,25 +19,54 @@ public class ClientWriter {
     }
 
     private void write() throws IOException {
-        var dos = new DataOutputStream(socket.getOutputStream());
-        var buffReader = new BufferedReader(new InputStreamReader(System.in));
+        setDosNBuffReader();
 
-        var message = "";
-        while (client.getSession()) {
-            message = buffReader.readLine();
-            if (!client.getSession() && !message.isEmpty())
-                System.out.println("Cannot send message!");
-            if (message.equals("stop")) client.setSession(false);
-            sendMSG(dos, message);
-        }
+        sendUsernameToServer();
 
+        initiateWriteSession();
+
+        close();
+    }
+
+    private void close() throws IOException {
         buffReader.close();
         dos.close();
     }
 
-    private void sendMSG(DataOutputStream dos, String msg) throws IOException {
-        dos.writeUTF(msg);
+    private void initiateWriteSession() throws IOException {
+        var message = "";
+        while (client.getSession()) {
+            message = buffReader.readLine();
+            applyFilters(message);
+            sendMessage(message);
+        }
+    }
+
+    private void applyFilters(String message) {
+        if (message.equals("stop")) client.setSession(false);
+    }
+
+    private void sendUsernameToServer() throws IOException {
+        System.out.print("Enter your username: ");
+        sendMessage(buffReader.readLine());
+    }
+
+    private void sendMessage(String message) throws IOException {
+        dos.writeUTF(message);
         dos.flush();
+    }
+
+    private void setDosNBuffReader() throws IOException {
+        dos = getDos();
+        buffReader = getBuffReader();
+    }
+
+    private BufferedReader getBuffReader() {
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    private DataOutputStream getDos() throws IOException {
+        return new DataOutputStream(socket.getOutputStream());
     }
 
     public void run() {

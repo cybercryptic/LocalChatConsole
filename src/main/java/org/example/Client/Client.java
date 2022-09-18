@@ -1,45 +1,39 @@
 package org.example.Client;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
-    private String userName;
     private final AtomicBoolean session = new AtomicBoolean();
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.out.println("Need: [Username] [Server host] [Port]");
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.out.println("Need: [Server host] [Port]");
             return;
         }
 
         var client = new Client();
         client.setSession(true);
-        client.setUsername(args[0]);
-        client.start(args[1], Integer.parseInt(args[2]));
+        client.start(args[0], Integer.parseInt(args[1]));
     }
 
-    public void start(String host, int port) {
-        try (var socket = new Socket(host, port)) {
-            System.out.println("Connected to server successfully");
+    public void start(String host, int port) throws IOException {
+        System.out.println("Connecting to Server host: " + host + " Port: " + port);
 
-            sendUsernameToServer(socket);
+        var socket = getSocket(host, port);
 
-            CompletableFuture.runAsync(() -> new ClientReader(this, socket).run());
-            CompletableFuture.runAsync(() -> new ClientWriter(this, socket).run());
+        System.out.println("Connected to server successfully");
 
-            while (getSession()) waitFor5s();
+        startReaderNWriter(socket);
 
-        } catch (IOException e) {
-            waitFor5s();
-            start(host, port);
-        }
+        waitUntilSessionEnds();
+
+        socket.close();
     }
 
-    private void sendUsernameToServer(Socket socket) throws IOException {
-        new DataOutputStream(socket.getOutputStream()).writeUTF(userName);
+    private void waitUntilSessionEnds() {
+        while (getSession()) waitFor5s();
     }
 
     private void waitFor5s() {
@@ -50,8 +44,24 @@ public class Client {
         }
     }
 
-    public void setUsername(String username) {
-        this.userName = username;
+    private void startReaderNWriter(Socket socket) {
+        CompletableFuture.runAsync(() -> new ClientReader(this, socket).run());
+        CompletableFuture.runAsync(() -> new ClientWriter(this, socket).run());
+    }
+
+    private Socket getSocket(String host, int port) {
+        Socket socket;
+
+        while (true) {
+            try {
+                socket = new Socket(host, port);
+                break;
+            } catch (IOException e) {
+                waitFor5s();
+            }
+        }
+
+        return socket;
     }
 
     public boolean getSession() {

@@ -10,6 +10,8 @@ public class ServerWriter implements Runnable {
 
     private final Server server;
     private final Socket socket;
+    private DataOutputStream dos;
+    private BufferedReader buffReader;
 
     public ServerWriter(Server server, Socket socket) {
         this.server = server;
@@ -17,22 +19,47 @@ public class ServerWriter implements Runnable {
     }
 
     private void write() throws IOException {
-        var dos = new DataOutputStream(socket.getOutputStream());
-        var buffReader = new BufferedReader(new InputStreamReader(System.in));
+        setDosNBuffReader();
 
+        initiateWriteSession();
+
+        close();
+    }
+
+    private void close() throws IOException {
+        dos.close();
+        buffReader.close();
+    }
+
+    private void initiateWriteSession() throws IOException {
         var message = "";
         while (server.getSession()) {
             message = buffReader.readLine();
-            if (message.equals("stop")) server.setSession(false);
-            sendMSG(dos, message);
+            applyFilters(message);
+            sendMessage(dos, message);
         }
-
-        dos.close();
     }
 
-    private void sendMSG(DataOutputStream dos, String message) throws IOException {
+    private void sendMessage(DataOutputStream dos, String message) throws IOException {
         dos.writeUTF(message);
         dos.flush();
+    }
+
+    private void applyFilters(String message) {
+        if (message.equals("stop")) server.setSession(false);
+    }
+
+    private void setDosNBuffReader() throws IOException {
+        dos = getDos();
+        buffReader = getBufferedReader();
+    }
+
+    private BufferedReader getBufferedReader() {
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    private DataOutputStream getDos() throws IOException {
+        return new DataOutputStream(socket.getOutputStream());
     }
 
     @Override
