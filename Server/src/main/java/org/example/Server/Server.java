@@ -9,16 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Server {
 
     private final AtomicBoolean session = new AtomicBoolean();
-    public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.out.println("Need [Port]");
-            return;
-        }
 
-        var server = new Server();
-        server.setSession(true);
-        server.start(Integer.parseInt(args[0]));
-    }
     public void start(int port) throws IOException {
         var server = getServer(port);
 

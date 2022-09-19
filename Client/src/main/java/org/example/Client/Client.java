@@ -7,16 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Client {
     private final AtomicBoolean session = new AtomicBoolean();
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            System.out.println("Need: [Server host] [Port]");
-            return;
-        }
-
-        var client = new Client();
-        client.setSession(true);
-        client.start(args[0], Integer.parseInt(args[1]));
-    }
 
     public void start(String host, int port) throws IOException {
         System.out.println("Connecting to Server host: " + host + " Port: " + port);
