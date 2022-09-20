@@ -1,4 +1,4 @@
-# Local Chat Console Application
+# Local Chat Console Application V1.0.0
 Responsively send and receive messages from Server to client and vice versa via console.
 ## How to run
 1. Download [java 18](https://www.oracle.com/java/technologies/downloads/) and install.
