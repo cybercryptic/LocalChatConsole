@@ -1,17 +1,19 @@
 package org.example.Server;
 
+import org.example.User;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ServerReader implements Runnable {
+public class UserReceiver implements Runnable {
 
-    private final Server server;
+    private final User user;
     private final Socket socket;
     private String username;
 
-    public ServerReader(Server server, Socket socket) {
-        this.server = server;
+    public UserReceiver(User user, Socket socket) {
+        this.user = user;
         this.socket = socket;
     }
 
@@ -27,7 +29,7 @@ public class ServerReader implements Runnable {
 
     private void initiateReadSession(DataInputStream dis) throws IOException {
         var message = "";
-        while (server.getSession()) {
+        while (true) {
             message = dis.readUTF();
             if (stopReceived(message)) break;
             print(message);

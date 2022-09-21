@@ -11,8 +11,7 @@ public class Main {
             return;
         }
 
-        var server = new Server();
-        server.setSession(true);
-        server.start(Integer.parseInt(args[0]));
+        var server = new Server(Integer.parseInt(args[0]));
+        server.start();
     }
 }
