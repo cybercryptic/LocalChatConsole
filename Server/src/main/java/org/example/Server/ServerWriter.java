@@ -1,65 +1,54 @@
 package org.example.Server;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
 public class ServerWriter implements Runnable {
 
     private final Server server;
-    private final Socket socket;
-    private DataOutputStream dos;
-    private BufferedReader buffReader;
 
-    public ServerWriter(Server server, Socket socket) {
+    public ServerWriter(Server server) {
         this.server = server;
-        this.socket = socket;
     }
 
     private void write() throws IOException {
-        setDosNBuffReader();
-
         initiateWriteSession();
-
-        close();
-    }
-
-    private void close() throws IOException {
-        dos.close();
-        buffReader.close();
     }
 
     private void initiateWriteSession() throws IOException {
+        var buffReader = getBufferedReader();
+
         var message = "";
         while (server.getSession()) {
             message = buffReader.readLine();
-            applyFilters(message);
-            sendMessage(dos, message);
+            if (stopReceived(message)) continue;
+            sendMessage(message);
         }
+
+        buffReader.close();
     }
 
-    private void sendMessage(DataOutputStream dos, String message) throws IOException {
-        dos.writeUTF(message);
-        dos.flush();
+    private void sendMessage(String message) throws IOException {
+        var msgArray = message.split(">");
+
+        if (msgArray.length != 2) {
+            System.out.println("Error: Wrong syntax");
+            return;
+        }
+
+        var id = Integer.parseInt(msgArray[0]);
+        var filteredMessage = msgArray[1].trim();
+        server.getUsers().get(id).sendMessage(filteredMessage);
     }
 
-    private void applyFilters(String message) {
+    private boolean stopReceived(String message) {
         if (message.equals("stop")) server.setSession(false);
-    }
-
-    private void setDosNBuffReader() throws IOException {
-        dos = getDos();
-        buffReader = getBufferedReader();
+        return false;
     }
 
     private BufferedReader getBufferedReader() {
         return new BufferedReader(new InputStreamReader(System.in));
-    }
-
-    private DataOutputStream getDos() throws IOException {
-        return new DataOutputStream(socket.getOutputStream());
     }
 
     @Override

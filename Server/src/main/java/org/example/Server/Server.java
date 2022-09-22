@@ -1,23 +1,22 @@
 package org.example.Server;
 
-import org.example.User;
+import org.example.User.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
 
     private final AtomicBoolean session = new AtomicBoolean();
     private final ServerSocket server;
-    private final List<User> users = new CopyOnWriteArrayList<>();
+    private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 
     public Server(int port) throws IOException {
         server = new ServerSocket(port);
+
         setSession(true);
     }
 
@@ -26,9 +25,15 @@ public class Server {
 
         startListenerAsync();
 
+        startWriterAsync();
+
         waitUntilSessionEnds();
 
         System.out.println("Server closed successfully");
+    }
+
+    private void startWriterAsync() {
+        CompletableFuture.runAsync(() -> new ServerWriter(this));
     }
 
     private void startListenerAsync() {
@@ -42,9 +47,10 @@ public class Server {
     }
 
     private void startListener() throws IOException {
+        var id = (int)(Math.random() * 100);
         while (Thread.activeCount() <= 100) {
             var socket = server.accept();
-            users.add(new User(this, socket));
+            users.putIfAbsent(id , new User(id, this, socket));
         }
     }
 
@@ -66,5 +72,9 @@ public class Server {
 
     public boolean getSession() {
         return session.get();
+    }
+
+    public ConcurrentHashMap<Integer, User> getUsers() {
+        return users;
     }
 }

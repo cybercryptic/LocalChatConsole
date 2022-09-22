@@ -1,6 +1,4 @@
-package org.example.Server;
-
-import org.example.User;
+package org.example.User;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -10,11 +8,13 @@ public class UserReceiver implements Runnable {
 
     private final User user;
     private final Socket socket;
+    private final int id;
     private String username;
 
     public UserReceiver(User user, Socket socket) {
         this.user = user;
         this.socket = socket;
+        this.id = user.getId();
     }
 
     private void read() throws IOException {
@@ -37,12 +37,13 @@ public class UserReceiver implements Runnable {
     }
 
     private void print(String message) {
-        System.out.println(username + ": " + message);
+        System.out.println(id + "> " + username + ": " + message);
     }
 
-    private boolean stopReceived(String message) {
+    private boolean stopReceived(String message) throws IOException {
         if (message.equals("stop")) {
             System.out.println(username + " disconnected");
+            user.close();
             return true;
         }
 
