@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.Server.Server;
+import org.example.Server.ChatServer;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ public class Main {
             return;
         }
 
-        var server = new Server(Integer.parseInt(args[0]));
+        var server = new ChatServer(Integer.parseInt(args[0]));
         server.start();
     }
 }

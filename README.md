@@ -8,7 +8,7 @@ Responsively send and receive messages from Server to client and vice versa via 
 > java -jar Client.jar [Server host] [Port]
 ## How to use
 1. Use localhost for Server host.
-2. Use available port for server and client.
-3. To stop the server or client, Type "Stop".
+2. Use available port for chatServer and client.
+3. To stop the chatServer or client, Type "Stop".
 ## Dependencies
 JDK 18 is used

@@ -4,54 +4,36 @@ import org.example.User.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.concurrent.CompletableFuture;
+import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server {
+public class ChatServer {
 
     private final AtomicBoolean session = new AtomicBoolean();
     private final ServerSocket server;
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 
-    public Server(int port) throws IOException {
+    public ChatServer(int port) throws IOException {
         server = new ServerSocket(port);
 
         setSession(true);
     }
 
+    public Socket accept() throws IOException {
+        return server.accept();
+    }
+
     public void start() {
         System.out.println("Server started successfully");
 
-        startListenerAsync();
+        new ServerListener(this).startAsync();
 
-        startWriterAsync();
+        new ServerWriter(this).writeAsync();
 
         waitUntilSessionEnds();
 
         System.out.println("Server closed successfully");
-    }
-
-    private void startWriterAsync() {
-        CompletableFuture.runAsync(() -> new ServerWriter(this));
-    }
-
-    private void startListenerAsync() {
-        CompletableFuture.runAsync(() -> {
-            try {
-                startListener();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void startListener() throws IOException {
-        var id = (int)(Math.random() * 100);
-        while (Thread.activeCount() <= 100) {
-            var socket = server.accept();
-            users.putIfAbsent(id , new User(id, this, socket));
-        }
     }
 
     private void waitUntilSessionEnds() {
@@ -76,5 +58,15 @@ public class Server {
 
     public ConcurrentHashMap<Integer, User> getUsers() {
         return users;
+    }
+
+    public int getServerCapacity() {
+        return 100;
+    }
+
+    public void stop() throws IOException {
+        setSession(false);
+        server.close();
+        System.exit(0);
     }
 }

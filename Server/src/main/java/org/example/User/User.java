@@ -1,6 +1,6 @@
 package org.example.User;
 
-import org.example.Server.Server;
+import org.example.Server.ChatServer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,12 +10,12 @@ import java.util.concurrent.CompletableFuture;
 public class User {
 
     private final int id;
-    private final Server server;
+    private final ChatServer chatServer;
     private final Socket socket;
 
-    public User(int id, Server server, Socket socket) {
+    public User(int id, ChatServer chatServer, Socket socket) {
         this.id = id;
-        this.server = server;
+        this.chatServer = chatServer;
         this.socket = socket;
 
         startReceiverAsync();
@@ -38,6 +38,6 @@ public class User {
 
     public void close() throws IOException {
         socket.close();
-        server.getUsers().remove(id);
+        chatServer.getUsers().remove(id);
     }
 }
