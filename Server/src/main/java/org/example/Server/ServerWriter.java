@@ -5,15 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerWriter {
+public class ServerWriter extends ChatServer {
 
-    private final ChatServer chatServer;
-    private final ActionCenter actionCenter;
-
-    public ServerWriter(ChatServer chatServer, ActionCenter actionCenter) {
-        this.chatServer = chatServer;
-        this.actionCenter = actionCenter;
-    }
+    private final ActionCenter actionCenter = new ActionCenter();
 
     public void writeAsync() {
         CompletableFuture.runAsync(() -> {
@@ -29,7 +23,7 @@ public class ServerWriter {
         var buffReader = getBufferedReader();
 
         var input = "";
-        while (chatServer.getSession()) {
+        while (session.get()) {
             input = buffReader.readLine();
             execute(input);
         }

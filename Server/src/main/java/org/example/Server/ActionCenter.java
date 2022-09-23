@@ -2,15 +2,9 @@ package org.example.Server;
 
 import java.io.IOException;
 
-public class ActionCenter {
+public class ActionCenter extends ChatServer {
 
-    private final ChatServer chatServer;
-    private final ServerSender sender;
-
-    public ActionCenter(ChatServer chatServer, ServerSender sender) {
-        this.chatServer = chatServer;
-        this.sender = sender;
-    }
+    private final ServerSender sender = new ServerSender();
 
     public void execute(String input) throws IOException {
         var filteredInput = input.split(" ", 3);
@@ -36,7 +30,7 @@ public class ActionCenter {
 
         var command = filteredInput[1].toLowerCase();
         switch (command) {
-            case "stop" -> chatServer.stop();
+            case "stop" -> stop();
             case "something" -> System.out.println("Do something here");
             default -> System.out.println("Invalid syntax! \n use -h for help");
         }

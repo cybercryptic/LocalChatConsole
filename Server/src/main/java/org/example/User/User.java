@@ -5,13 +5,12 @@ import org.example.Server.ChatServer;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.concurrent.CompletableFuture;
 
 public class User {
 
     private final int id;
-    private final ChatServer chatServer;
     private final Socket socket;
+    private final ChatServer chatServer;
 
     public User(int id, ChatServer chatServer, Socket socket) {
         this.id = id;
@@ -22,7 +21,7 @@ public class User {
     }
 
     private void startReceiverAsync() {
-        CompletableFuture.runAsync(() -> new UserReceiver(this, socket).run());
+
     }
 
     public void sendMessage(String message) throws IOException {

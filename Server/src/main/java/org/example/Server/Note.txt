@@ -1,0 +1,13 @@
+Start the server
+    Listen for incoming clients
+        If you found one
+            Then make a socket and attach an id and socket in a list and Call it user
+        If you didn't find one
+            Then wait until session ends
+    Every user has 2 methods
+        1. Async Receiver for receiving incoming messages
+        2. Message sender method
+    User Async Receiver
+        It will receive messages and prints on console along with ID
+    User message sender
+        It will send message when needed

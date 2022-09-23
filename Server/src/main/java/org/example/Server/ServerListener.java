@@ -4,19 +4,10 @@ import org.example.User.User;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class ServerListener {
+public class ServerListener extends ChatServer {
 
-    private final ChatServer chatServer;
-    private final ConcurrentHashMap<Integer, User> users;
-
-    public ServerListener(ChatServer chatServer) {
-        this.chatServer = chatServer;
-        users = chatServer.getUsers();
-    }
-
-    public void startAsync() {
+    public void listenAsync() {
         CompletableFuture.runAsync(() -> {
             try {
                 start();
@@ -27,11 +18,10 @@ public class ServerListener {
     }
 
     private void start() throws IOException {
-        var CAPACITY = chatServer.getServerCapacity();
-        var id = getId();
-        while (areUsersUnderCapacity(CAPACITY)) {
-            var socket = chatServer.accept();
-            users.putIfAbsent(id , new User(id, chatServer, socket));
+        while (session.get() && areUsersUnderCapacity(SERVER_CAPACITY.get())) {
+            var id = getId();
+            var socket = server.accept();
+            users.putIfAbsent(id , new User(id, this, socket));
         }
     }
 
