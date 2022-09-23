@@ -11,25 +11,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ChatServer {
 
     private final AtomicBoolean session = new AtomicBoolean();
-    private final ServerSocket server;
+    private ServerSocket server;
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
+    private final ServerListener listener;
+    private final ServerWriter writer;
 
-    public ChatServer(int port) throws IOException {
+    public ChatServer(ServerListener listener, ServerWriter writer) {
+        this.listener = listener;
+        this.writer = writer;
+    }
+
+    public void start(int port) throws IOException {
         server = new ServerSocket(port);
 
         setSession(true);
-    }
 
-    public Socket accept() throws IOException {
-        return server.accept();
-    }
-
-    public void start() {
         System.out.println("Server started successfully");
 
-        new ServerListener(this).startAsync();
+        listener.startAsync();
 
-        new ServerWriter(this).writeAsync();
+        writer.writeAsync();
 
         waitUntilSessionEnds();
 
@@ -50,6 +51,10 @@ public class ChatServer {
 
     public void setSession(boolean session) {
         this.session.set(session);
+    }
+
+    public Socket accept() throws IOException {
+        return server.accept();
     }
 
     public boolean getSession() {
