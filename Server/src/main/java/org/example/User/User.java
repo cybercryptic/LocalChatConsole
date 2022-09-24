@@ -1,6 +1,6 @@
 package org.example.User;
 
-import org.example.Server.ChatServer;
+import org.example.Server.ServerUserManager;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,20 +8,23 @@ import java.net.Socket;
 
 public class User {
 
-    private final int id;
-    private final Socket socket;
-    private final ChatServer chatServer;
+    protected int id;
+    protected String username;
+    protected Socket socket;
+    private final ServerUserManager userManager = new ServerUserManager();
+    private final UserReceiver receiver = new UserReceiver();
 
-    public User(int id, ChatServer chatServer, Socket socket) {
+    public User(int id, Socket socket) {
         this.id = id;
-        this.chatServer = chatServer;
         this.socket = socket;
 
         startReceiverAsync();
     }
+    public User() {}
 
     private void startReceiverAsync() {
-
+        System.out.println("User receiver started");
+        receiver.startAsync();
     }
 
     public void sendMessage(String message) throws IOException {
@@ -29,14 +32,12 @@ public class User {
         dos.writeUTF(message);
         dos.flush();
         dos.close();
-    }
 
-    public int getId() {
-        return id;
+        System.out.println("Message sent to: " + username);
     }
 
     public void close() throws IOException {
         socket.close();
-        chatServer.getUsers().remove(id);
+        userManager.removeUser(id);
     }
 }

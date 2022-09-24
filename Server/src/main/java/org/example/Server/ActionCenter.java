@@ -2,7 +2,7 @@ package org.example.Server;
 
 import java.io.IOException;
 
-public class ActionCenter extends ChatServer {
+public class ActionCenter extends Configuration {
 
     private final ServerSender sender = new ServerSender();
 
@@ -16,12 +16,20 @@ public class ActionCenter extends ChatServer {
         switch (filteredInput[0]) {
             case "-u" -> sendMessage(filteredInput);
             case "-c" -> executeCommand(filteredInput);
-            case "-h" -> System.out.println("Print help");
+            case "-h" -> printHelp();
             default -> System.out.println("Invalid syntax! \n use -h for help");
         }
     }
 
-    public void executeCommand(String[] filteredInput) throws IOException {
+    private void printHelp() {
+        System.out.println("""
+                -u [id] [message]
+                -c [command]
+                -h Print help message & exit
+                """);
+    }
+
+    private void executeCommand(String[] filteredInput) {
         if (filteredInput.length != 2) {
             System.out.println("Invalid command syntax");
             System.out.println("-h for help");
@@ -30,9 +38,9 @@ public class ActionCenter extends ChatServer {
 
         var command = filteredInput[1].toLowerCase();
         switch (command) {
-            case "stop" -> stop();
+            case "stop" -> session.set(false);
             case "something" -> System.out.println("Do something here");
-            default -> System.out.println("Invalid syntax! \n use -h for help");
+            default -> System.out.println("Invalid command \n use -h for help");
         }
     }
 

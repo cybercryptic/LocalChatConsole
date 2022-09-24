@@ -1,25 +1,29 @@
 package org.example.Server;
 
+import org.example.Server.Interfaces.Writer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerWriter extends ChatServer {
+public class ServerWriter extends Writer {
 
     private final ActionCenter actionCenter = new ActionCenter();
 
-    public void writeAsync() {
+    public void startAsync() {
         CompletableFuture.runAsync(() -> {
             try {
-                write();
+                start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void write() throws IOException {
+    private void start() throws IOException {
+        System.out.println("Server writer started");
+
         var buffReader = getBufferedReader();
 
         var input = "";
@@ -29,6 +33,8 @@ public class ServerWriter extends ChatServer {
         }
 
         buffReader.close();
+
+        System.out.println("Server writer stopped");
     }
 
     private void execute(String input) throws IOException {

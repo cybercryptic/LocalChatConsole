@@ -2,22 +2,19 @@ package org.example.User;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
 
-public class UserReceiver implements Runnable {
-
-    private final User user;
-    private final Socket socket;
-    private final int id;
-    private String username;
-
-    public UserReceiver(User user, Socket socket) {
-        this.user = user;
-        this.socket = socket;
-        this.id = user.getId();
+public class UserReceiver extends User {
+    public void startAsync() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
-
-    private void read() throws IOException {
+    private void start() throws IOException {
         var dis = getDis();
 
         username = getUsername(dis);
@@ -43,7 +40,7 @@ public class UserReceiver implements Runnable {
     private boolean stopReceived(String message) throws IOException {
         if (message.equals("stop")) {
             System.out.println(username + " disconnected");
-            user.close();
+            close();
             return true;
         }
 
@@ -56,14 +53,5 @@ public class UserReceiver implements Runnable {
 
     private DataInputStream getDis() throws IOException {
         return new DataInputStream(socket.getInputStream());
-    }
-
-    @Override
-    public void run () {
-        try {
-            read();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

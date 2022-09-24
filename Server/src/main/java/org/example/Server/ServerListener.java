@@ -1,13 +1,16 @@
 package org.example.Server;
 
+import org.example.Server.Interfaces.Listener;
 import org.example.User.User;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerListener extends ChatServer {
+public class ServerListener extends Listener {
 
-    public void listenAsync() {
+    private final ServerUserManager userManager = new ServerUserManager();
+
+    public void startAsync() {
         CompletableFuture.runAsync(() -> {
             try {
                 start();
@@ -18,11 +21,15 @@ public class ServerListener extends ChatServer {
     }
 
     private void start() throws IOException {
-        while (session.get() && areUsersUnderCapacity(SERVER_CAPACITY.get())) {
+        System.out.println("Server listener started");
+
+        while (session.get() && areUsersUnderCapacity(SERVER_CAPACITY)) {
             var id = getId();
             var socket = server.accept();
-            users.putIfAbsent(id , new User(id, this, socket));
+            userManager.addUser(id, new User(id, socket));
         }
+
+        System.out.println("Server listener stopped");
     }
 
     private boolean areUsersUnderCapacity(int capacity) {
