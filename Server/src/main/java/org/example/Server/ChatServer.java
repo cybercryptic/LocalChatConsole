@@ -1,19 +1,27 @@
 package org.example.Server;
 
-import org.example.Server.Interfaces.Server;
-
 import java.io.IOException;
+import java.net.ServerSocket;
 
-public class ChatServer extends Server {
+public class ChatServer extends Configuration {
+
 
     public void start(int port, int serverCapacity) throws IOException {
-        super.start(port, serverCapacity);
+        server = new ServerSocket(port);
+        session.set(true);
+        super.SERVER_CAPACITY = serverCapacity;
+        System.out.println("Server started successfully");
+
+        new ServerListener().startAsync(server);
+
+        new ServerWriter().startAsync();
+
+
 
         waitUntilSessionEnds();
 
-        super.stop();
+        stop();
     }
-
 
     private void waitUntilSessionEnds() {
         while (session.get()) waitFor5s();
@@ -25,5 +33,11 @@ public class ChatServer extends Server {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected void stop() throws IOException {
+        session.set(false);
+        server.close();
+        System.out.println("Server stopped successfully");
     }
 }

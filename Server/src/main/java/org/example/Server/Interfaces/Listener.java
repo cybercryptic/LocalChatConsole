@@ -1,8 +1,7 @@
 package org.example.Server.Interfaces;
 
+import java.net.ServerSocket;
 
-import org.example.Server.Configuration;
-
-public abstract class Listener extends Configuration {
-    protected abstract void startAsync();
+public interface Listener {
+    void startAsync(ServerSocket server);
 }

@@ -17,13 +17,12 @@ public class User {
     public User(int id, Socket socket) {
         this.id = id;
         this.socket = socket;
-
-        startReceiverAsync();
     }
     public User() {}
 
-    private void startReceiverAsync() {
+    public void startReceiverAsync() {
         System.out.println("User receiver started");
+
         receiver.startAsync();
     }
 
