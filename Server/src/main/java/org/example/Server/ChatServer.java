@@ -13,8 +13,8 @@ public class ChatServer {
     public void start(int port, int serverCapacity) throws IOException {
         server.start(port, serverCapacity);
 
-        server.listener.startAsync();
-        server.writer.startAsync(server);
+        server.startListener();
+        server.startWriter();
 
         waitUntilSessionEnds();
 
@@ -22,7 +22,7 @@ public class ChatServer {
     }
 
     private void waitUntilSessionEnds() {
-        while (true) waitFor5s();
+        while (server.getSession().get()) waitFor5s();
     }
 
     private void waitFor5s() {

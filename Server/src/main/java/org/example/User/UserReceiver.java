@@ -2,17 +2,14 @@ package org.example.User;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
 public class UserReceiver {
 
-    private final Socket socket;
-    private final int id;
+    private final User user;
 
-    public UserReceiver(Socket socket, int id) {
-        this.socket = socket;
-        this.id = id;
+    public UserReceiver(User user) {
+        this.user = user;
     }
 
     public void startAsync() {
@@ -26,14 +23,18 @@ public class UserReceiver {
     }
 
     private void start() throws IOException {
-        var dis = new DataInputStream(socket.getInputStream());
+        var dis = new DataInputStream(user.getSocket().getInputStream());
+        var id = user.getId();
 
         var username = dis.readUTF();
 
         var message = "";
         while (true) {
             message = dis.readUTF();
-            if (message.equals("stop")) break;
+            if (message.equals("stop")) {
+                user.close();
+                break;
+            }
             System.out.println(id + "> " + username + ": " + message);
         }
 

@@ -5,7 +5,13 @@ import org.example.User.User;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerListener extends Configuration {
+public class ServerListener {
+
+    private final Server server;
+
+    public ServerListener(Server server) {
+        this.server = server;
+    }
 
     public void startAsync() {
         CompletableFuture.runAsync(() -> {
@@ -18,21 +24,22 @@ public class ServerListener extends Configuration {
     }
 
     private void listener() throws IOException {
-        while (areUsersUnderCapacity()) {
+        while (server.getSession().get() && areUsersUnderCapacity()) {
             var id = getId();
-            var socket = server.accept();
-            userManager.addUser(id, new User(id, socket));
+            var socket = server.getServer().accept();
+            System.out.println("New user connected!!");
+            server.userManager.addUser(id, new User(id, socket, server));
         }
     }
 
     private boolean areUsersUnderCapacity() {
-        return userManager.usersSize() < serverCapacity;
+        return server.userManager.usersSize() < server.getServerCapacity();
     }
 
     private int getId() {
         while (true) {
             var id = getRandomId();
-            if (userManager.containsId(id)) continue;
+            if (server.userManager.containsId(id)) continue;
             return id;
         }
     }

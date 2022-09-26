@@ -5,16 +5,14 @@ import java.io.IOException;
 public class ActionCenter {
 
     private final Server server;
-    private final ServerSender sender;
 
-    public ActionCenter(Server server, ServerSender sender) {
+    public ActionCenter(Server server) {
         this.server = server;
-        this.sender = sender;
     }
 
     public void execute(String input) throws IOException {
         var filteredInput = input.split(" ", 3);
-        if (filteredInput.length < 2) {
+        if (filteredInput.length == 0) {
             System.out.println("Invalid input!!! \n -h for help");
             return;
         }
@@ -59,6 +57,6 @@ public class ActionCenter {
 
         var id = Integer.parseInt(filteredInput[1]);
         var message = filteredInput[2];
-        sender.send(id, message);
+        server.sender.send(id, message);
     }
 }

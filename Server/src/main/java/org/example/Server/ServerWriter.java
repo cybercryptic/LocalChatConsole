@@ -5,12 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerWriter extends Configuration {
+public class ServerWriter {
 
-    private ActionCenter actionCenter;
+    private final Server server;
 
-    public void startAsync(Server server) {
-        actionCenter = new ActionCenter(server, new ServerSender(userManager));
+    public ServerWriter(Server server) {
+        this.server = server;
+    }
+
+
+    public void startAsync() {
         CompletableFuture.runAsync(() -> {
             try {
                 start();
@@ -24,7 +28,7 @@ public class ServerWriter extends Configuration {
         var buffReader = getBufferedReader();
 
         var input = "";
-        while (session.get()) {
+        while (server.getSession().get()) {
             input = buffReader.readLine();
             execute(input);
         }
@@ -33,7 +37,7 @@ public class ServerWriter extends Configuration {
     }
 
     private void execute(String input) throws IOException {
-        actionCenter.execute(input);
+        server.actionCenter.execute(input);
     }
 
     private BufferedReader getBufferedReader() {
