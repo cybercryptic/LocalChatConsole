@@ -52,8 +52,8 @@ public class ClientWriter {
     }
 
 
-    private void isStopReceived(String message) throws IOException {
-        if (message.equals("stop")) client.stop();
+    private void isStopReceived(String message) {
+        if (message.equals("stop")) client.getSession().set(false);
 
     }
 

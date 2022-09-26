@@ -39,7 +39,10 @@ public class ActionCenter {
 
         var command = filteredInput[1].toLowerCase();
         switch (command) {
-            case "stop" -> server.getSession().set(false);
+            case "stop" -> {
+                server.broadcaster.broadcast("stop");
+                server.getSession().set(false);
+            }
             case "something" -> System.out.println("Do something here");
             default -> System.out.println("Invalid command \n use -h for help");
         }

@@ -2,6 +2,7 @@ package org.example.Server;
 
 import org.example.User.User;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserManager {
@@ -18,15 +19,15 @@ public class UserManager {
     public User getUser(int id) {
         return users.get(id);
     }
+
+    public Collection<User> getUsers() {
+        return users.values();
+    }
     public boolean containsId(int id) {
         return users.containsKey(id);
     }
 
     public int usersSize() {
         return users.size();
-    }
-
-    public void showActiveUsers() {
-        System.out.println(users);
     }
 }

@@ -12,8 +12,8 @@ public class Server {
     private ServerListener listener;
     private ServerWriter writer;
     protected ServerSender sender;
-
     protected ActionCenter actionCenter;
+    protected ServerBroadcaster broadcaster;
 
     public Server() {
         initializeHelpers();
@@ -43,6 +43,7 @@ public class Server {
 
     private void initializeHelpers() {
         userManager = new UserManager();
+        broadcaster = new ServerBroadcaster(userManager);
         listener = new ServerListener(this);
         writer = new ServerWriter(this);
         sender = new ServerSender(userManager);

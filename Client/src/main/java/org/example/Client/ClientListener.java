@@ -30,7 +30,7 @@ public class ClientListener {
             message = dis.readUTF();
             if (message.equals("stop")) {
                 System.out.println("Server is disconnected");
-                client.stop();
+                client.getSession().set(false);
                 break;
             }
             System.out.println("Server: " + message);
