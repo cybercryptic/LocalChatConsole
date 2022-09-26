@@ -4,51 +4,40 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
 
 public class ClientWriter {
 
     private final Client client;
-    private final Socket socket;
-    private DataOutputStream dos;
-    private BufferedReader buffReader;
+    private final DataOutputStream dos;
 
-    public ClientWriter(Client client, Socket socket) {
+    public ClientWriter(Client client) {
         this.client = client;
-        this.socket = socket;
+        dos = client.getDos();
     }
 
-    private void write() throws IOException {
-        setDosNBuffReader();
-
-        sendUsernameToServer();
-
-        initiateWriteSession();
-
-        close();
+    public void startAsync() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
+    private void start() throws IOException {
+        var buffReader = getBuffReader();
 
-    private void close() throws IOException {
-        buffReader.close();
-        dos.close();
-    }
+        sendUsernameToServer(buffReader);
 
-    private void initiateWriteSession() throws IOException {
         var message = "";
-        while (client.getSession()) {
+        while (client.getSession().get()) {
             message = buffReader.readLine();
-            applyFilters(message);
+            isStopReceived(message);
             sendMessage(message);
         }
-    }
 
-    private void applyFilters(String message) {
-        if (message.equals("stop")) client.setSession(false);
-    }
-
-    private void sendUsernameToServer() throws IOException {
-        System.out.print("Enter your username: ");
-        sendMessage(buffReader.readLine());
+        buffReader.close();
     }
 
     private void sendMessage(String message) throws IOException {
@@ -56,24 +45,18 @@ public class ClientWriter {
         dos.flush();
     }
 
-    private void setDosNBuffReader() throws IOException {
-        dos = getDos();
-        buffReader = getBuffReader();
+    private void sendUsernameToServer(BufferedReader buffReader) throws IOException {
+        System.out.print("Enter your username: ");
+        sendMessage(buffReader.readLine());
+    }
+
+
+    private void isStopReceived(String message) throws IOException {
+        if (message.equals("stop")) client.stop();
+
     }
 
     private BufferedReader getBuffReader() {
         return new BufferedReader(new InputStreamReader(System.in));
-    }
-
-    private DataOutputStream getDos() throws IOException {
-        return new DataOutputStream(socket.getOutputStream());
-    }
-
-    public void run() {
-        try {
-            write();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

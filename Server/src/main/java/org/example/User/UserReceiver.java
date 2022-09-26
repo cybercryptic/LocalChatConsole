@@ -32,7 +32,7 @@ public class UserReceiver {
         while (true) {
             message = dis.readUTF();
             if (message.equals("stop")) {
-                user.close();
+                user.stop();
                 break;
             }
             System.out.println(id + "> " + username + ": " + message);

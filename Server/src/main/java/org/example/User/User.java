@@ -42,7 +42,7 @@ public class User {
         sender = new UserSender(this);
     }
 
-    public void close() throws IOException {
+    public void stop() throws IOException {
         dis.close();
         dos.close();
         socket.close();
