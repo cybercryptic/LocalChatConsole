@@ -45,7 +45,7 @@ public class UserReceiver {
 
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        System.out.println(id + ":" + username + " connected");
+        System.out.println(id + "> " + username + " connected");
     }
 
     private DataInputStream getDis() throws IOException {

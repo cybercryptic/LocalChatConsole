@@ -58,7 +58,6 @@ public class ClientWriter {
     }
 
     private DataOutputStream getDos() throws IOException {
-        System.out.println(client.getSocket().isClosed());
         return new DataOutputStream(client.getSocket().getOutputStream());
     }
 
