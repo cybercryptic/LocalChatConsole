@@ -11,7 +11,7 @@ public class ChatClient {
 
     public void start(String host, int port) throws IOException {
         client.start(host, port);
-
+        System.out.println("done");
         client.startListener();
         client.startWriter();
 

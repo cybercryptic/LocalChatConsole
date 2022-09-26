@@ -1,5 +1,6 @@
 package org.example.Client;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -7,7 +8,7 @@ public class ClientListener {
 
     private final Client client;
 
-    public ClientListener(Client client) {
+    public ClientListener(Client client){
         this.client = client;
     }
 
@@ -22,7 +23,7 @@ public class ClientListener {
     }
 
     private void start() throws IOException {
-        var dis = client.getDis();
+        var dis = getDis();
 
         var message = "";
         while (true) {
@@ -34,5 +35,11 @@ public class ClientListener {
             }
             System.out.println("Server: " + message);
         }
+
+        dis.close();
+    }
+
+    private DataInputStream getDis() throws IOException {
+        return new DataInputStream(client.getSocket().getInputStream());
     }
 }

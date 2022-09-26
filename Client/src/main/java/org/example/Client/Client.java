@@ -1,7 +1,5 @@
 package org.example.Client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -10,15 +8,10 @@ public class Client {
 
     private Socket socket;
     private final AtomicBoolean session = new AtomicBoolean();
-    private DataOutputStream dos;
-    private DataInputStream dis;
     private ClientListener listener;
     private ClientWriter writer;
 
-    public Client() throws IOException {
-
-        setDosNDis();
-
+    public Client() {
         initiateHelpers();
     }
 
@@ -38,8 +31,6 @@ public class Client {
     }
 
     public void stop() throws IOException {
-        dis.close();
-        dos.close();
         session.set(false);
         socket.close();
 
@@ -75,17 +66,8 @@ public class Client {
         }
     }
 
-    protected DataOutputStream getDos() {
-        return dos;
-    }
-
-    protected DataInputStream getDis() {
-        return dis;
-    }
-
-    private void setDosNDis() throws IOException {
-        dos = new DataOutputStream(socket.getOutputStream());
-        dis = new DataInputStream(socket.getInputStream());
+    public Socket getSocket() {
+        return socket;
     }
 
     public AtomicBoolean getSession() {

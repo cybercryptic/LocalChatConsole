@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
+        if (args.length != 2) {
             System.out.println("Need [Port] [Server capacity]");
         }
 

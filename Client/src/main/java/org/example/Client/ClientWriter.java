@@ -9,11 +9,10 @@ import java.util.concurrent.CompletableFuture;
 public class ClientWriter {
 
     private final Client client;
-    private final DataOutputStream dos;
+    private DataOutputStream dos;
 
     public ClientWriter(Client client) {
         this.client = client;
-        dos = client.getDos();
     }
 
     public void startAsync() {
@@ -25,7 +24,9 @@ public class ClientWriter {
             }
         });
     }
+
     private void start() throws IOException {
+        dos = getDos();
         var buffReader = getBuffReader();
 
         sendUsernameToServer(buffReader);
@@ -37,9 +38,9 @@ public class ClientWriter {
             sendMessage(message);
         }
 
+        dos.close();
         buffReader.close();
     }
-
     private void sendMessage(String message) throws IOException {
         dos.writeUTF(message);
         dos.flush();
@@ -54,6 +55,11 @@ public class ClientWriter {
     private void isStopReceived(String message) throws IOException {
         if (message.equals("stop")) client.stop();
 
+    }
+
+    private DataOutputStream getDos() throws IOException {
+        System.out.println(client.getSocket().isClosed());
+        return new DataOutputStream(client.getSocket().getOutputStream());
     }
 
     private BufferedReader getBuffReader() {
