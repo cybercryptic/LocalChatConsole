@@ -1,14 +1,17 @@
 package org.example.User;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 public class UserReceiver {
 
     private final User user;
+    private final int id;
 
     public UserReceiver(User user) {
         this.user = user;
+        id = user.getId();
     }
 
     public void startAsync() {
@@ -22,8 +25,7 @@ public class UserReceiver {
     }
 
     private void start() throws IOException {
-        var dis = user.getDis();
-        var id = user.getId();
+        var dis = getDis();
 
         var username = dis.readUTF();
         setUsernameNNotify(username);
@@ -43,6 +45,10 @@ public class UserReceiver {
 
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        System.out.println(username + " connected");
+        System.out.println(id + ":" + username + " connected");
+    }
+
+    private DataInputStream getDis() throws IOException {
+        return new DataInputStream(user.getSocket().getInputStream());
     }
 }
