@@ -1,29 +1,27 @@
 package org.example.Server;
 
-import org.example.Server.Interfaces.Writer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ServerWriter extends Writer {
+public class ServerWriter {
 
-    private final ActionCenter actionCenter = new ActionCenter();
+    private ActionCenter actionCenter;
 
-    public void startAsync() {
+    public void startAsync(Server server) {
+        actionCenter = new ActionCenter(server, new ServerSender(server.userManager));
         CompletableFuture.runAsync(() -> {
             try {
-                start();
+                start(server.getSession());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void start() throws IOException {
-        System.out.println("Server writer started");
-
+    private void start(AtomicBoolean session) throws IOException {
         var buffReader = getBufferedReader();
 
         var input = "";
@@ -33,8 +31,6 @@ public class ServerWriter extends Writer {
         }
 
         buffReader.close();
-
-        System.out.println("Server writer stopped");
     }
 
     private void execute(String input) throws IOException {

@@ -1,51 +1,39 @@
 package org.example.Server;
 
-import org.example.Server.Interfaces.Listener;
-import org.example.User.User;
-
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerListener extends ChatServer implements Listener {
+public class ServerListener {
 
-    private final ServerUserManager userManager = new ServerUserManager();
-
-    public void startAsync(ServerSocket server) {
+    public void startAsync(Server server) {
         CompletableFuture.runAsync(() -> {
             try {
-                start();
+                listener(server);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void start() throws IOException {
-        System.out.println("Server listener started");
-        System.out.println(session.get());
-        while (session.get() && areUsersUnderCapacity(SERVER_CAPACITY)) {
-            var id = getId();
-            System.out.println("Adding user: " + id);
-            var socket = server.accept();
-            System.out.println(socket.isClosed());
-            System.out.println("Added user: " + id);
-            var user = new User(id, socket);
-            userManager.addUser(id, user);
-            user.startReceiverAsync();
+    private void listener(Server server) throws IOException {
+        var userManager = server.userManager;
+        var serverSocket = server.getServer();
+
+        while (areUsersUnderCapacity(userManager.usersSize())) {
+            var id = getId(userManager);
+            var socket = serverSocket.accept();
+            server.userManager.addUser(id, new User(id, socket));
         }
-
-        System.out.println("Server listener stopped");
     }
 
-    private boolean areUsersUnderCapacity(int capacity) {
-        return Thread.activeCount() <= capacity;
+    private boolean areUsersUnderCapacity(int usersSize) {
+        return usersSize < 3;
     }
 
-    private int getId() {
+    private int getId(UserManager userManager) {
         while (true) {
             var id = getRandomId();
-            if (users.containsKey(id)) continue;
+            if (userManager.containsId(id)) continue;
             return id;
         }
     }

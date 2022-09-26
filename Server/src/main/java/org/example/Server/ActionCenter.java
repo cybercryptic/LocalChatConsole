@@ -2,13 +2,19 @@ package org.example.Server;
 
 import java.io.IOException;
 
-public class ActionCenter extends Configuration {
+public class ActionCenter {
 
-    private final ServerSender sender = new ServerSender();
+    private final Server server;
+    private final ServerSender sender;
+
+    public ActionCenter(Server server, ServerSender sender) {
+        this.server = server;
+        this.sender = sender;
+    }
 
     public void execute(String input) throws IOException {
         var filteredInput = input.split(" ", 3);
-        if (filteredInput.length != 2) {
+        if (filteredInput.length < 2) {
             System.out.println("Invalid input!!! \n -h for help");
             return;
         }
@@ -17,7 +23,7 @@ public class ActionCenter extends Configuration {
             case "-u" -> sendMessage(filteredInput);
             case "-c" -> executeCommand(filteredInput);
             case "-h" -> printHelp();
-            default -> System.out.println("Invalid syntax! \n use -h for help");
+            default -> System.out.println("-h for help");
         }
     }
 
@@ -38,7 +44,7 @@ public class ActionCenter extends Configuration {
 
         var command = filteredInput[1].toLowerCase();
         switch (command) {
-            case "stop" -> session.set(false);
+            case "stop" -> server.getSession().set(false);
             case "something" -> System.out.println("Do something here");
             default -> System.out.println("Invalid command \n use -h for help");
         }

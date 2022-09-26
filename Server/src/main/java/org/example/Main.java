@@ -1,6 +1,7 @@
 package org.example;
 
-import org.example.Server.TheClean.Server;
+import org.example.Server.ChatServer;
+import org.example.Server.Server;
 
 import java.io.IOException;
 
@@ -10,9 +11,7 @@ public class Main {
             System.out.println("Need [Port]");
         }
 
-//        var server = new ChatServer();
-//        server.start(3344, 100);
-        var server = new Server(3344, 3);
-        server.start();
+        var server = new ChatServer(new Server());
+        server.start(3344, 3);
     }
 }
