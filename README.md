@@ -9,6 +9,7 @@ Server can connect to multiple clients and send & receive messages.
 ## How to use
 ```
 -h for help for server
+For clients? Just type...
 ```
 ###### Note: If you stop server, all clients will stop.
 ## Dependencies
