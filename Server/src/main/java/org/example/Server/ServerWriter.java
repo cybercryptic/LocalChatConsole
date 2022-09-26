@@ -4,24 +4,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ServerWriter {
+public class ServerWriter extends Configuration {
 
     private ActionCenter actionCenter;
 
     public void startAsync(Server server) {
-        actionCenter = new ActionCenter(server, new ServerSender(server.userManager));
+        actionCenter = new ActionCenter(server, new ServerSender(userManager));
         CompletableFuture.runAsync(() -> {
             try {
-                start(server.getSession());
+                start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void start(AtomicBoolean session) throws IOException {
+    private void start() throws IOException {
         var buffReader = getBufferedReader();
 
         var input = "";

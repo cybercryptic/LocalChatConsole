@@ -1,36 +1,35 @@
 package org.example.Server;
 
+import org.example.User.User;
+
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerListener {
+public class ServerListener extends Configuration {
 
-    public void startAsync(Server server) {
+    public void startAsync() {
         CompletableFuture.runAsync(() -> {
             try {
-                listener(server);
+                listener();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void listener(Server server) throws IOException {
-        var userManager = server.userManager;
-        var serverSocket = server.getServer();
-
-        while (areUsersUnderCapacity(userManager.usersSize())) {
-            var id = getId(userManager);
-            var socket = serverSocket.accept();
-            server.userManager.addUser(id, new User(id, socket));
+    private void listener() throws IOException {
+        while (areUsersUnderCapacity()) {
+            var id = getId();
+            var socket = server.accept();
+            userManager.addUser(id, new User(id, socket));
         }
     }
 
-    private boolean areUsersUnderCapacity(int usersSize) {
-        return usersSize < 3;
+    private boolean areUsersUnderCapacity() {
+        return userManager.usersSize() < serverCapacity;
     }
 
-    private int getId(UserManager userManager) {
+    private int getId() {
         while (true) {
             var id = getRandomId();
             if (userManager.containsId(id)) continue;

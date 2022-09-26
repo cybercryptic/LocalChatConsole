@@ -1,4 +1,4 @@
-package org.example.Server;
+package org.example.User;
 
 import java.io.DataInputStream;
 import java.io.IOException;

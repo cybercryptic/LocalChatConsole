@@ -1,5 +1,7 @@
 package org.example.Server;
 
+import org.example.User.User;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserManager {
