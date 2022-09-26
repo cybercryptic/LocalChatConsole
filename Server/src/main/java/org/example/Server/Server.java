@@ -12,6 +12,7 @@ public class Server {
     private ServerListener listener;
     private ServerWriter writer;
     protected ServerSender sender;
+
     protected ActionCenter actionCenter;
 
     public Server() {

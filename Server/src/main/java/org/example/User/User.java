@@ -2,15 +2,18 @@ package org.example.User;
 
 import org.example.Server.Server;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
 public class User {
     private final int id;
+    private String username;
     private final Socket socket;
     private final Server server;
-    private final DataOutputStream dos;
+    private DataOutputStream dos;
+    private DataInputStream dis;
     private UserReceiver receiver;
     private UserSender sender;
 
@@ -18,11 +21,13 @@ public class User {
         this.id = id;
         this.socket = socket;
         this.server = server;
-        dos = new DataOutputStream(socket.getOutputStream());
+
+        setDosNDis();
 
         initialHelperClasses();
         startReceiver();
     }
+
 
     public void startReceiver() {
         receiver.startAsync();
@@ -38,20 +43,38 @@ public class User {
     }
 
     public void close() throws IOException {
+        dis.close();
         dos.close();
         socket.close();
         server.userManager.removeUser(id);
+
+        System.out.println(username + " disconnected");
+        server.userManager.showActiveUsers();
+    }
+
+    private void setDosNDis() throws IOException {
+        dos = new DataOutputStream(socket.getOutputStream());
+        dis = new DataInputStream(socket.getInputStream());
     }
 
     protected int getId() {
         return id;
     }
 
-    protected Socket getSocket() {
-        return socket;
+    protected void setUsername(String username) {
+        this.username = username;
+    }
+
+    protected DataInputStream getDis() {
+        return dis;
     }
 
     protected DataOutputStream getDos() {
         return dos;
+    }
+
+    @Override
+    public String toString() {
+        return "User: " + username;
     }
 }

@@ -25,4 +25,8 @@ public class UserManager {
     public int usersSize() {
         return users.size();
     }
+
+    public void showActiveUsers() {
+        System.out.println(users);
+    }
 }

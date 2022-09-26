@@ -27,7 +27,6 @@ public class ServerListener {
         while (server.getSession().get() && areUsersUnderCapacity()) {
             var id = getId();
             var socket = server.getServer().accept();
-            System.out.println("New user connected!!");
             server.userManager.addUser(id, new User(id, socket, server));
         }
     }

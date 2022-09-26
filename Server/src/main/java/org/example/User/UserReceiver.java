@@ -1,6 +1,5 @@
 package org.example.User;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,10 +22,11 @@ public class UserReceiver {
     }
 
     private void start() throws IOException {
-        var dis = new DataInputStream(user.getSocket().getInputStream());
+        var dis = user.getDis();
         var id = user.getId();
 
         var username = dis.readUTF();
+        setUsernameNNotify(username);
 
         var message = "";
         while (true) {
@@ -39,5 +39,10 @@ public class UserReceiver {
         }
 
         dis.close();
+    }
+
+    private void setUsernameNNotify(String username) {
+        user.setUsername(username);
+        System.out.println(username + " connected");
     }
 }
