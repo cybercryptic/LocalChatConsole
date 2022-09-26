@@ -49,7 +49,6 @@ public class User {
         server.userManager.removeUser(id);
 
         System.out.println(username + " disconnected");
-        server.userManager.showActiveUsers();
     }
 
     private void setDosNDis() throws IOException {

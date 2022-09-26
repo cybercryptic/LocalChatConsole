@@ -11,12 +11,9 @@ public class ActionCenter {
     }
 
     public void execute(String input) throws IOException {
-        var filteredInput = input.split(" ", 3);
-        if (filteredInput.length == 0) {
-            System.out.println("Invalid input!!! \n -h for help");
-            return;
-        }
+        if (input.trim().isEmpty()) return;
 
+        var filteredInput = input.trim().split(" ", 3);
         switch (filteredInput[0]) {
             case "-u" -> sendMessage(filteredInput);
             case "-c" -> executeCommand(filteredInput);
