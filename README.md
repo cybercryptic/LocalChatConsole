@@ -23,6 +23,7 @@ Just type....
 To stop
 type.. stop
 ```
+Only few commands supported for now.
 ###### Note: If you stop server, all clients will stop.
 ## Dependencies
 JDK 18 is used
