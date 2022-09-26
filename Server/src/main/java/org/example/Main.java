@@ -8,10 +8,13 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
-            System.out.println("Need [Port]");
+            System.out.println("Need [Port] [Server capacity]");
         }
 
+        var port = Integer.parseInt(args[0]);
+        var serverCapacity = Integer.parseInt(args[1]);
+
         var server = new ChatServer(new Server());
-        server.start(3344, 3);
+        server.start(port, serverCapacity);
     }
 }
