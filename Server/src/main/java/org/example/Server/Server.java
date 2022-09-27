@@ -1,5 +1,7 @@
 package org.example.Server;
 
+import org.example.User.UserTaskManager;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -15,6 +17,7 @@ public class Server {
     protected ActionCenter actionCenter;
     public ServerBroadcaster broadcaster;
     public ServerNotifier notifier;
+    public UserTaskManager userTaskManager;
 
     public Server() {
         initializeHelpers();
@@ -50,6 +53,7 @@ public class Server {
         writer = new ServerWriter(this);
         sender = new ServerSender(userManager, broadcaster);
         actionCenter = new ActionCenter(this);
+        userTaskManager = new UserTaskManager(this);
     }
 
     protected ServerSocket getServer() {

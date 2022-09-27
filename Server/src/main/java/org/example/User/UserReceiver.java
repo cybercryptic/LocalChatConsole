@@ -1,6 +1,6 @@
 package org.example.User;
 
-import org.example.Server.Server;
+import org.example.User.Interfaces.URTaskManager;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,13 +9,13 @@ import java.util.concurrent.CompletableFuture;
 public class UserReceiver {
 
     private final User user;
-    private final Server server;
     private final int id;
+    private final URTaskManager taskManager;
 
-    public UserReceiver(User user, Server server) {
+    public UserReceiver(User user, URTaskManager URTaskManager) {
         this.user = user;
         id = user.getId();
-        this.server = server;
+        this.taskManager = URTaskManager;
     }
 
     public void startAsync() {
@@ -41,19 +41,15 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            send(username, message);
+            taskManager.broadcastMessage(id, username, message);
         }
 
         dis.close();
     }
 
-    private void send(String username, String message) {
-        server.sender.sendEveryoneExcept(id, username, message);
-    }
-
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        server.notifier.notifyNewUser(username, id);
+        taskManager.notifyNewUser(id, username);
     }
 
     private DataInputStream getDis() throws IOException {

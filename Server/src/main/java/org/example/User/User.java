@@ -10,14 +10,17 @@ public class User {
     private final int id;
     private String username;
     private final Socket socket;
+    private final DataOutputStream dos;
     private final Server server;
     private UserReceiver receiver;
     private UserSender sender;
 
-    public User(int id, Socket socket, Server server) {
+    public User(int id, Socket socket, Server server) throws IOException {
         this.id = id;
         this.socket = socket;
         this.server = server;
+
+        dos = getDos();
 
         initialHelperClasses();
         startReceiver();
@@ -33,11 +36,12 @@ public class User {
     }
 
     private void initialHelperClasses() {
-        receiver = new UserReceiver(this, server);
+        receiver = new UserReceiver(this, server.userTaskManager);
         sender = new UserSender(this);
     }
 
     public void stop() throws IOException {
+        dos.close();
         socket.close();
         server.userManager.removeUser(id);
 
