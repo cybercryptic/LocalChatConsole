@@ -42,6 +42,7 @@ public class ServerListener {
                 "Ask admin or wait for other user to exit!";
         new DataOutputStream(socket.getOutputStream()).writeUTF(capacityReachedAlert);
         new DataOutputStream(socket.getOutputStream()).writeUTF("stop");
+        socket.close();
     }
 
     private boolean areUsersUnderCapacity() {
