@@ -41,19 +41,25 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            var usrMessage = username + ": " + message;
-            server.broadcaster.broadcastExcept(message, id);
-            System.out.println(id + "> " + usrMessage);
+            broadcast(username, message);
         }
 
         dis.close();
     }
 
+    private void broadcast(String username, String message) {
+        var usrMessage = username + ": " + message;
+        server.broadcaster.broadcastExcept(message, id);
+        System.out.println(id + "> " + usrMessage);
+    }
+
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        var usrMessage = username + " connected";
+        var usrMessage = "...............................\n" +
+                "[" +username + "] " + " joined the group\n" +
+                "........................................";
         server.broadcaster.broadcastExcept(usrMessage, id);
-        System.out.println(id + "> " + usrMessage);
+        System.out.println(id + "> " + username + " connected");
     }
 
     private DataInputStream getDis() throws IOException {
