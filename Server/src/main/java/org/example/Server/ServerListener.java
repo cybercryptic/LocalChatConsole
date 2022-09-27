@@ -10,9 +10,11 @@ import java.util.concurrent.CompletableFuture;
 public class ServerListener {
 
     private final Server server;
+    private final UserManager userManager;
 
     public ServerListener(Server server) {
         this.server = server;
+        userManager = server.userManager;
     }
 
     public void startAsync() {
@@ -33,7 +35,7 @@ public class ServerListener {
                 sendCapacityReachedAlert(socket);
                 break;
             }
-            server.userManager.addUser(id, new User(id, socket, server));
+            userManager.addUser(id, new User(id, socket, server));
         }
     }
 
@@ -46,13 +48,13 @@ public class ServerListener {
     }
 
     private boolean areUsersUnderCapacity() {
-        return server.userManager.usersSize() < server.getServerCapacity();
+        return userManager.usersSize() < server.getServerCapacity();
     }
 
     private int getId() {
         while (true) {
             var id = getRandomId();
-            if (server.userManager.containsId(id)) continue;
+            if (userManager.containsId(id)) continue;
             return id;
         }
     }
