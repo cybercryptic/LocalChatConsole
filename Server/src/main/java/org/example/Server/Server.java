@@ -11,7 +11,7 @@ public class Server {
     public UserManager userManager;
     private ServerListener listener;
     private ServerWriter writer;
-    protected ServerSender sender;
+    public ServerSender sender;
     protected ActionCenter actionCenter;
     public ServerBroadcaster broadcaster;
     public ServerNotifier notifier;
@@ -48,7 +48,7 @@ public class Server {
         notifier = new ServerNotifier(broadcaster);
         listener = new ServerListener(this);
         writer = new ServerWriter(this);
-        sender = new ServerSender(userManager);
+        sender = new ServerSender(userManager, broadcaster);
         actionCenter = new ActionCenter(this);
     }
 

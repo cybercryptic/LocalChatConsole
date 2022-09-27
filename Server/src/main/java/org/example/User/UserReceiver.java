@@ -41,16 +41,14 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            broadcast(username, message);
+            send(username, message);
         }
 
         dis.close();
     }
 
-    private void broadcast(String username, String message) {
-        var usrMessage = username + ": " + message;
-        server.broadcaster.broadcastExcept(message, id);
-        System.out.println(id + "> " + usrMessage);
+    private void send(String username, String message) {
+        server.sender.sendEveryoneExcept(id, username, message);
     }
 
     private void setUsernameNNotify(String username) {
