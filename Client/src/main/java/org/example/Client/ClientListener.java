@@ -33,7 +33,7 @@ public class ClientListener {
                 client.getSession().set(false);
                 break;
             }
-            System.out.println("Server: " + message);
+            System.out.println(message);
         }
 
         dis.close();
