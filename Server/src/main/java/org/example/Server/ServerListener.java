@@ -2,7 +2,9 @@ package org.example.Server;
 
 import org.example.User.User;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
 public class ServerListener {
@@ -24,11 +26,22 @@ public class ServerListener {
     }
 
     private void listener() throws IOException {
-        while (server.getSession().get() && areUsersUnderCapacity()) {
+        while (server.getSession().get()) {
             var id = getId();
             var socket = server.getServer().accept();
+            if (!areUsersUnderCapacity()) {
+                sendCapacityReachedAlert(socket);
+                break;
+            }
             server.userManager.addUser(id, new User(id, socket, server));
         }
+    }
+
+    private void sendCapacityReachedAlert(Socket socket) throws IOException {
+        var capacityReachedAlert = "Server capacity reached!!!\n" +
+                "Ask admin or wait for other user to exit!";
+        new DataOutputStream(socket.getOutputStream()).writeUTF(capacityReachedAlert);
+        new DataOutputStream(socket.getOutputStream()).writeUTF("stop");
     }
 
     private boolean areUsersUnderCapacity() {
