@@ -33,7 +33,7 @@ public class User {
     }
 
     private void initialHelperClasses() {
-        receiver = new UserReceiver(this);
+        receiver = new UserReceiver(this, server);
         sender = new UserSender(this);
     }
 

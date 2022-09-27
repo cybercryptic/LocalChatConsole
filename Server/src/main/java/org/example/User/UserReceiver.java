@@ -1,5 +1,7 @@
 package org.example.User;
 
+import org.example.Server.Server;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -7,11 +9,13 @@ import java.util.concurrent.CompletableFuture;
 public class UserReceiver {
 
     private final User user;
+    private final Server server;
     private final int id;
 
-    public UserReceiver(User user) {
+    public UserReceiver(User user, Server server) {
         this.user = user;
         id = user.getId();
+        this.server = server;
     }
 
     public void startAsync() {
@@ -45,7 +49,9 @@ public class UserReceiver {
 
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        System.out.println(id + "> " + username + " connected");
+        var usrMessage = username + " connected";
+        server.broadcaster.broadcast(usrMessage);
+        System.out.println(id + "> " + usrMessage);
     }
 
     private DataInputStream getDis() throws IOException {

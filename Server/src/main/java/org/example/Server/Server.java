@@ -13,7 +13,7 @@ public class Server {
     private ServerWriter writer;
     protected ServerSender sender;
     protected ActionCenter actionCenter;
-    protected ServerBroadcaster broadcaster;
+    public ServerBroadcaster broadcaster;
 
     public Server() {
         initializeHelpers();
