@@ -55,11 +55,7 @@ public class UserReceiver {
 
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        var usrMessage = "...............................\n" +
-                "[" +username + "] " + " joined the group\n" +
-                "........................................";
-        server.broadcaster.broadcastExcept(usrMessage, id);
-        System.out.println(id + "> " + username + " connected");
+        server.notifier.notifyNewUser(username, id);
     }
 
     private DataInputStream getDis() throws IOException {

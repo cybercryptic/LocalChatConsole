@@ -14,6 +14,7 @@ public class Server {
     protected ServerSender sender;
     protected ActionCenter actionCenter;
     public ServerBroadcaster broadcaster;
+    public ServerNotifier notifier;
 
     public Server() {
         initializeHelpers();
@@ -44,6 +45,7 @@ public class Server {
     private void initializeHelpers() {
         userManager = new UserManager();
         broadcaster = new ServerBroadcaster(userManager);
+        notifier = new ServerNotifier(broadcaster);
         listener = new ServerListener(this);
         writer = new ServerWriter(this);
         sender = new ServerSender(userManager);
