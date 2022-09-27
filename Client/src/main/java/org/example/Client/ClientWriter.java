@@ -47,8 +47,21 @@ public class ClientWriter {
     }
 
     private void sendUsernameToServer(BufferedReader buffReader) throws IOException {
+        var username = validateUsername(buffReader);
+        sendMessage(username);
+    }
+
+    private String validateUsername(BufferedReader buffReader) throws IOException {
+        String username;
+        do {
+            username = getUsername(buffReader);
+        } while (username.trim().isEmpty());
+        return username;
+    }
+
+    private String getUsername(BufferedReader buffReader) throws IOException {
         System.out.print("Enter your username: ");
-        sendMessage(buffReader.readLine());
+        return buffReader.readLine();
     }
 
 
