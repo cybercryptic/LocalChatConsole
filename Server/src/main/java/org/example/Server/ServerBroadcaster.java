@@ -13,4 +13,11 @@ public class ServerBroadcaster {
             user.sendMessage(message);
         }
     }
+
+    public void broadcastExcept(String message, int id) {
+        for (var user : manager.getUsers()) {
+            if (user.getId() == id) continue;
+            user.sendMessage(message);
+        }
+    }
 }

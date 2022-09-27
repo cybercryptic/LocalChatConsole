@@ -44,7 +44,7 @@ public class User {
         System.out.println(username + " disconnected");
     }
 
-    protected int getId() {
+    public int getId() {
         return id;
     }
 

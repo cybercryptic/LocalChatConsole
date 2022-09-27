@@ -23,6 +23,7 @@ public class UserManager {
     public Collection<User> getUsers() {
         return users.values();
     }
+
     public boolean containsId(int id) {
         return users.containsKey(id);
     }

@@ -41,7 +41,9 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            System.out.println(id + "> " + username + ": " + message);
+            var usrMessage = username + ": " + message;
+            server.broadcaster.broadcastExcept(message, id);
+            System.out.println(id + "> " + usrMessage);
         }
 
         dis.close();
@@ -50,7 +52,7 @@ public class UserReceiver {
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
         var usrMessage = username + " connected";
-        server.broadcaster.broadcast(usrMessage);
+        server.broadcaster.broadcastExcept(usrMessage, id);
         System.out.println(id + "> " + usrMessage);
     }
 
