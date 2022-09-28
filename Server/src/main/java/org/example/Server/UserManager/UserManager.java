@@ -1,4 +1,4 @@
-package org.example.Server;
+package org.example.Server.UserManager;
 
 import org.example.User.User;
 
@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserManager {
+
+    public ActiveUserManager activeUserManager = new ActiveUserManager();
+
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 
     public void addUser(int id, User user) {
