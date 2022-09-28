@@ -49,7 +49,7 @@ public class UserReceiver {
 
     private void setUsernameNNotify(String username) {
         user.setUsername(username);
-        taskManager.notifyNewUser(id, username);
+        taskManager.notifyNewUser(user);
     }
 
     private DataInputStream getDis() throws IOException {

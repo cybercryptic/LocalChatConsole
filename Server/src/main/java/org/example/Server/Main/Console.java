@@ -1,4 +1,4 @@
-package org.example.Server;
+package org.example.Server.Main;
 
 public class Console {
     public void print(String message) {

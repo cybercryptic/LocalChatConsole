@@ -1,4 +1,6 @@
-package org.example.Server;
+package org.example;
+
+import org.example.Server.Main.Server;
 
 import java.io.IOException;
 

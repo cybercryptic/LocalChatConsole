@@ -1,4 +1,4 @@
-package org.example.Server;
+package org.example.Server.Main;
 
 import org.example.Server.UserManager.UserManager;
 import org.example.User.User;
@@ -46,6 +46,7 @@ public class ServerListener {
         new DataOutputStream(socket.getOutputStream()).writeUTF(capacityReachedAlert);
         new DataOutputStream(socket.getOutputStream()).writeUTF("stop");
         socket.close();
+        // TODO: Refactor this!!! ASAP
     }
 
     private boolean areUsersUnderCapacity() {

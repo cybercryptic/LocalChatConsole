@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UserManager {
 
-    public ActiveUserManager activeUserManager = new ActiveUserManager();
+    public ActiveUserManager active = new ActiveUserManager();
 
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 

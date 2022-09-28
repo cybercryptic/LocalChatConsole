@@ -1,13 +1,14 @@
-package org.example.Server;
+package org.example.Server.Messengers.MessageSenders;
 
+import org.example.Server.UserManager.ActiveUserManager;
 import org.example.Server.UserManager.UserManager;
 
 public class ServerBroadcaster {
 
-    private final UserManager manager;
+    private final ActiveUserManager manager;
 
     public ServerBroadcaster(UserManager manager) {
-        this.manager = manager;
+        this.manager = manager.active;
     }
 
     public void broadcast(String message) {

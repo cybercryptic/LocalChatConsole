@@ -1,5 +1,7 @@
 package org.example.Server;
 
+import org.example.Server.Main.Server;
+
 public class ActionCenter {
 
     private final Server server;
@@ -38,7 +40,7 @@ public class ActionCenter {
         var command = filteredInput[1].toLowerCase();
         switch (command) {
             case "stop" -> {
-                server.broadcaster.broadcast("stop");
+                server.notifier.notifyServerShutdownToUsers();
                 server.getSession().set(false);
             }
             case "something" -> System.out.println("Do something here");
@@ -55,6 +57,6 @@ public class ActionCenter {
 
         var id = Integer.parseInt(filteredInput[1]);
         var message = filteredInput[2];
-        server.sender.sendFromServerTo(id, message);
+        server.messenger.sendFromServerTo(id, message);
     }
 }

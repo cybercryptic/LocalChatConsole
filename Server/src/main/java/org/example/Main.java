@@ -1,7 +1,6 @@
 package org.example;
 
-import org.example.Server.ChatServer;
-import org.example.Server.Server;
+import org.example.Server.Main.Server;
 
 import java.io.IOException;
 

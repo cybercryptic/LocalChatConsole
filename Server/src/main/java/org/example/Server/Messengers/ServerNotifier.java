@@ -1,4 +1,7 @@
-package org.example.Server;
+package org.example.Server.Messengers;
+
+import org.example.Server.Main.Server;
+import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
 
 public class ServerNotifier {
 
@@ -6,6 +9,10 @@ public class ServerNotifier {
 
     public ServerNotifier(ServerBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
+    }
+
+    public void notifyServerShutdownToUsers() {
+        broadcaster.broadcast("stop");
     }
 
     public void notifyNewUser(int id, String username) {

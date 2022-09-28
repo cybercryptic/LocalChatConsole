@@ -1,4 +1,4 @@
-package org.example.Server;
+package org.example.Server.Main;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class ServerWriter {
         buffReader.close();
     }
 
-    private void execute(String input) throws IOException {
+    private void execute(String input) {
         server.actionCenter.execute(input);
     }
 

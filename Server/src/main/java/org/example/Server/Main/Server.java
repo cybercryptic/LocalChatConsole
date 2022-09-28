@@ -1,6 +1,12 @@
-package org.example.Server;
+package org.example.Server.Main;
 
+import org.example.Server.ActionCenter;
+import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
+import org.example.Server.Messengers.ServerMessenger;
+import org.example.Server.Messengers.ServerNotifier;
+import org.example.Server.Messengers.MessageSenders.ServerSender;
 import org.example.Server.UserManager.UserManager;
+import org.example.Server.UserTaskManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -41,9 +47,10 @@ public class Server extends ServerHelpers {
         userManager = new UserManager();
         broadcaster = new ServerBroadcaster(userManager);
         notifier = new ServerNotifier(broadcaster);
+        messenger = new ServerMessenger(this);
         listener = new ServerListener(this);
         writer = new ServerWriter(this);
-        sender = new ServerSender(userManager, broadcaster);
+        sender = new ServerSender(userManager);
         actionCenter = new ActionCenter(this);
         userTaskManager = new UserTaskManager(this);
     }
@@ -56,7 +63,7 @@ public class Server extends ServerHelpers {
         return serverCapacity;
     }
 
-    protected AtomicBoolean getSession() {
+    public AtomicBoolean getSession() {
         return session;
     }
 }

@@ -10,12 +10,13 @@ import java.net.Socket;
 public class User {
     private final int id;
     private String username;
+
     private final Socket socket;
+
     private DataOutputStream dos;
     private final UTaskManager taskManager;
     private UserReceiver receiver;
     private UserSender sender;
-
     public User(int id, Socket socket, UTaskManager taskManager) throws IOException {
         this.id = id;
         this.socket = socket;
@@ -46,6 +47,10 @@ public class User {
 
     protected Socket getSocket() {
         return socket;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     protected void setUsername(String username) {
