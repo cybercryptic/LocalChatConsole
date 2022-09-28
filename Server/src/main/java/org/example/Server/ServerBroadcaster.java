@@ -14,9 +14,9 @@ public class ServerBroadcaster {
         }
     }
 
-    public void broadcastExcept(String message, int id) {
+    public void broadcastExcept(String message, int IgnoreId) {
         for (var user : manager.getUsers()) {
-            if (user.getId() == id) continue;
+            if (user.getId() == IgnoreId) continue;
             user.sendMessage(message);
         }
     }

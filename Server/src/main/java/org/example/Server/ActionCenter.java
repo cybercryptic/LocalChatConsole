@@ -1,7 +1,5 @@
 package org.example.Server;
 
-import java.io.IOException;
-
 public class ActionCenter {
 
     private final Server server;
@@ -10,7 +8,7 @@ public class ActionCenter {
         this.server = server;
     }
 
-    public void execute(String input) throws IOException {
+    public void execute(String input) {
         if (input.trim().isEmpty()) return;
 
         var filteredInput = input.trim().split(" ", 3);
@@ -48,7 +46,7 @@ public class ActionCenter {
         }
     }
 
-    private void sendMessage(String[] filteredInput) throws IOException {
+    private void sendMessage(String[] filteredInput) {
         if (filteredInput.length != 3) {
             System.out.println("Invalid message sending syntax");
             System.out.println("-h for help");
@@ -57,6 +55,6 @@ public class ActionCenter {
 
         var id = Integer.parseInt(filteredInput[1]);
         var message = filteredInput[2];
-        server.sender.send(id, message);
+        server.sender.sendFromServerTo(id, message);
     }
 }

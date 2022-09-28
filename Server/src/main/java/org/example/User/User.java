@@ -1,6 +1,7 @@
 package org.example.User;
 
-import org.example.Server.Server;
+import org.example.User.Interfaces.URTaskManager;
+import org.example.User.Interfaces.UTaskManager;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,24 +11,19 @@ public class User {
     private final int id;
     private String username;
     private final Socket socket;
-    private final DataOutputStream dos;
-    private final Server server;
+    private DataOutputStream dos;
+    private final UTaskManager taskManager;
     private UserReceiver receiver;
     private UserSender sender;
 
-    public User(int id, Socket socket, Server server) throws IOException {
+    public User(int id, Socket socket, UTaskManager taskManager) throws IOException {
         this.id = id;
         this.socket = socket;
-        this.server = server;
+        this.taskManager = taskManager;
 
-        dos = getDos();
+        setDos();
 
         initialHelperClasses();
-        startReceiver();
-    }
-
-
-    public void startReceiver() {
         receiver.startAsync();
     }
 
@@ -35,33 +31,37 @@ public class User {
         sender.sendMessage(message);
     }
 
-    private void initialHelperClasses() {
-        receiver = new UserReceiver(this, server.userTaskManager);
-        sender = new UserSender(this);
-    }
-
     public void stop() throws IOException {
         dos.close();
         socket.close();
-        server.userManager.removeUser(id);
+        taskManager.notifyUserExit(id, username);
 
         System.out.println(username + " disconnected");
     }
 
-    public int getId() {
-        return id;
-    }
-
-    protected void setUsername(String username) {
-        this.username = username;
+    private void initialHelperClasses() {
+        receiver = new UserReceiver(this, (URTaskManager)taskManager);
+        sender = new UserSender(this);
     }
 
     protected Socket getSocket() {
         return socket;
     }
 
-    protected DataOutputStream getDos() throws IOException {
-        return new DataOutputStream(socket.getOutputStream());
+    protected void setUsername(String username) {
+        this.username = username;
+    }
+
+    protected DataOutputStream getDos() {
+        return dos;
+    }
+
+    private void setDos() throws IOException {
+        dos = new DataOutputStream(socket.getOutputStream());
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

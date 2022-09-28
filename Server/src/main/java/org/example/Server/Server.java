@@ -6,18 +6,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server {
+public class Server extends Configuration {
     private ServerSocket server;
     private int serverCapacity;
     private final AtomicBoolean session = new AtomicBoolean();
-    public UserManager userManager;
-    private ServerListener listener;
-    private ServerWriter writer;
-    public ServerSender sender;
-    protected ActionCenter actionCenter;
-    public ServerBroadcaster broadcaster;
-    public ServerNotifier notifier;
-    public UserTaskManager userTaskManager;
 
     public Server() {
         initializeHelpers();

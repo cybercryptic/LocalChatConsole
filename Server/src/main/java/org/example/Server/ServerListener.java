@@ -35,7 +35,7 @@ public class ServerListener {
                 sendCapacityReachedAlert(socket);
                 break;
             }
-            userManager.addUser(id, new User(id, socket, server));
+            userManager.addUser(id, new User(id, socket, server.userTaskManager));
         }
     }
 

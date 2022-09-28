@@ -10,18 +10,18 @@ public class ServerSender {
         this.broadcaster = broadcaster;
     }
 
-    public void send(int id, String message) {
-        if (!userManager.containsId(id)) {
-            System.out.println("Unknown user id: " + id);
+    public void sendFromServerTo(int ToId, String message) {
+        if (!userManager.containsId(ToId)) {
+            System.out.println("Unknown user id: " + ToId);
             return;
         }
 
-        userManager.getUser(id).sendMessage("{" + "Server" + "}: " + message);
+        userManager.getUser(ToId).sendMessage("{" + "Server" + "}: " + message);
     }
 
     public void sendEveryoneExcept(int id, String username, String message) {
         var usrMessage = "[" + username + "]: " + message;
         broadcaster.broadcastExcept(usrMessage, id);
-        System.out.println(id + "> " + username + ": " + message);
+        Server.console.print(id + "> " + username + ": " + message);
     }
 }
