@@ -1,6 +1,5 @@
-package org.example.User;
+package org.example.Server;
 
-import org.example.Server.Server;
 import org.example.User.Interfaces.URTaskManager;
 import org.example.User.Interfaces.UTaskManager;
 

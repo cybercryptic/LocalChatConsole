@@ -1,5 +1,7 @@
 package org.example.Server;
 
+import org.example.Server.UserManager.UserManager;
+
 public class ServerBroadcaster {
 
     private final UserManager manager;

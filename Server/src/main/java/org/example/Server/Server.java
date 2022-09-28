@@ -1,12 +1,12 @@
 package org.example.Server;
 
-import org.example.User.UserTaskManager;
+import org.example.Server.UserManager.UserManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server extends Configuration {
+public class Server extends ServerHelpers {
     private ServerSocket server;
     private int serverCapacity;
     private final AtomicBoolean session = new AtomicBoolean();

@@ -23,7 +23,7 @@ public class User {
 
         setDos();
 
-        initialHelperClasses();
+        initiateHelperClasses();
         receiver.startAsync();
     }
 
@@ -39,7 +39,7 @@ public class User {
         System.out.println(username + " disconnected");
     }
 
-    private void initialHelperClasses() {
+    private void initiateHelperClasses() {
         receiver = new UserReceiver(this, (URTaskManager)taskManager);
         sender = new UserSender(this);
     }
