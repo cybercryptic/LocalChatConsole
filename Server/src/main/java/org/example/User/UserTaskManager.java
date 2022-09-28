@@ -23,7 +23,8 @@ public class UserTaskManager implements UTaskManager, URTaskManager {
     }
 
     @Override
-    public void notifyUserExit(int id) {
+    public void notifyUserExit(int id, String username) {
         server.userManager.removeUser(id);
+        server.notifier.notifyDisconnectedUser(id, username);
     }
 }

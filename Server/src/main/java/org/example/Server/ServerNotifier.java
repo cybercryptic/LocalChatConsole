@@ -11,6 +11,12 @@ public class ServerNotifier {
     public void notifyNewUser(int id, String username) {
         var usrMessage = "[" + username + "] " + " joined the group";
         broadcaster.broadcastExcept(usrMessage, id);
-        System.out.println(id + "> " + username + " connected");
+        Server.console.print(id + "> " + username + " connected");
+    }
+
+    public void notifyDisconnectedUser(int id, String username) {
+        var usrMessage = "[" + username + "] " + " disconnected";
+        broadcaster.broadcastExcept(usrMessage, id);
+        Server.console.print(username + " disconnected");
     }
 }
