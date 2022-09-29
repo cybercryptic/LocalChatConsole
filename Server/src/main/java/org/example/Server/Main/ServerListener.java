@@ -3,13 +3,12 @@ package org.example.Server.Main;
 import org.example.Server.UserManager.UserManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
 public class ServerListener {
 
+    private int noOfUsers;
     private final Server server;
     private final UserManager userManager;
     private final UTaskManager uTaskManager;
@@ -34,25 +33,18 @@ public class ServerListener {
         while (server.getSession().get()) {
             var id = getId();
             var socket = server.getServer().accept();
+            var user = new User(id, socket, uTaskManager);
             if (!areUsersUnderCapacity()) {
-                sendCapacityReachedAlert(socket);
-                break;
+                // TODO: Fix HERE
+                continue;
             }
-            userManager.addUser(id, new User(id, socket, uTaskManager));
+            userManager.addUser(id, user);
+            noOfUsers++;
         }
     }
 
-    private void sendCapacityReachedAlert(Socket socket) throws IOException {
-        var capacityReachedAlert = "Server capacity reached!!!\n" +
-                "Ask admin or wait for other user to exit!";
-        new DataOutputStream(socket.getOutputStream()).writeUTF(capacityReachedAlert);
-        new DataOutputStream(socket.getOutputStream()).writeUTF("stop");
-        socket.close();
-        // TODO: Refactor this!!! ASAP
-    }
-
     private boolean areUsersUnderCapacity() {
-        return userManager.usersSize() < server.getServerCapacity();
+        return noOfUsers < server.getServerCapacity();
     }
 
     private int getId() {

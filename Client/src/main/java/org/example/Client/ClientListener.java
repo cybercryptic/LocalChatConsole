@@ -12,21 +12,31 @@ public class ClientListener {
         this.client = client;
     }
 
-    public void startAsync() {
+    public void startAsync(ClientWriter writer) {
         CompletableFuture.runAsync(() -> {
             try {
-                start();
+                start(writer);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void start() throws IOException {
+    private void start(ClientWriter writer) throws IOException {
         var dis = getDis();
 
+
+        var isRequestAccepted = Boolean.parseBoolean(dis.readUTF());
+
+        System.out.println(isRequestAccepted);
+
+        if (isRequestAccepted) {
+            System.out.println("Writer started");
+            writer.startAsync();
+        }
+
         var message = "";
-        while (true) {
+        while (isRequestAccepted) {
             message = dis.readUTF();
             if (message.equals("stop")) {
                 System.out.println("Server is disconnected");
@@ -35,6 +45,8 @@ public class ClientListener {
             }
             System.out.println(message);
         }
+
+        System.out.println("Server might be full, Try again!");
 
         dis.close();
     }

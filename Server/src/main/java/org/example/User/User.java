@@ -25,9 +25,9 @@ public class User {
         setDos();
 
         initiateHelperClasses();
+        sendMessage("true");
         receiver.startAsync();
     }
-
     public void sendMessage(String message) {
         sender.sendMessage(message);
     }

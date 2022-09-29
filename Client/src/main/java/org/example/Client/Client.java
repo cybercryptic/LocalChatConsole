@@ -23,11 +23,7 @@ public class Client {
     }
 
     public void startListener() {
-        listener.startAsync();
-    }
-
-    public void startWriter() {
-        writer.startAsync();
+        listener.startAsync(writer);
     }
 
     public void stop() throws IOException {
