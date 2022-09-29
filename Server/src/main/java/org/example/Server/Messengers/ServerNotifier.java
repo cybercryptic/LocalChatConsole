@@ -2,7 +2,9 @@ package org.example.Server.Messengers;
 
 import org.example.Server.Main.Server;
 import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ServerNotifier {
 
     private final ServerBroadcaster broadcaster;

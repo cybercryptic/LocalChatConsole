@@ -1,14 +1,15 @@
 package org.example.Server.Messengers.MessageSenders;
 
 import org.example.Server.UserManager.ActiveUserManager;
-import org.example.Server.UserManager.UserManager;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ServerBroadcaster {
 
     private final ActiveUserManager manager;
 
-    public ServerBroadcaster(UserManager manager) {
-        this.manager = manager.active;
+    public ServerBroadcaster(ActiveUserManager manager) {
+        this.manager = manager;
     }
 
     public void broadcast(String message) {

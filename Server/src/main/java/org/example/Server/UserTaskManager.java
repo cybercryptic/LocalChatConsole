@@ -1,16 +1,26 @@
 package org.example.Server;
 
-import org.example.Server.Main.Server;
+import org.example.Server.Messengers.ServerMessenger;
+import org.example.Server.Messengers.ServerNotifier;
+import org.example.Server.UserManager.ActiveUserManager;
+import org.example.Server.UserManager.UserManager;
 import org.example.User.Interfaces.URTaskManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
 
 public class UserTaskManager implements UTaskManager, URTaskManager {
 
-    private final Server server;
+    private final UserManager userManager;
+    private final ActiveUserManager activeUserManager;
+    private final ServerNotifier notifier;
+    private final ServerMessenger messenger;
 
-    public UserTaskManager(Server server) {
-        this.server = server;
+    public UserTaskManager(UserManager userManager, ActiveUserManager activeUserManager, ServerNotifier notifier,
+                           ServerMessenger messenger) {
+        this.userManager = userManager;
+        this.activeUserManager = activeUserManager;
+        this.notifier = notifier;
+        this.messenger = messenger;
     }
 
     @Override
@@ -18,19 +28,19 @@ public class UserTaskManager implements UTaskManager, URTaskManager {
         var id = user.getId();
         var username = user.getUsername();
 
-        server.userManager.removeUser(id);
-        server.userManager.active.addUser(id, user);
-        server.notifier.notifyNewUser(id, username);
+        userManager.removeUser(id);
+        activeUserManager.addUser(id, user);
+        notifier.notifyNewUser(id, username);
     }
 
     @Override
     public void broadcastMessage(int id, String username, String message) {
-        server.messenger.broadcastToGroupUsers(id, username, message);
+        messenger.broadcastToGroupUsers(id, username, message);
     }
 
     @Override
     public void notifyUserExit(int id, String username) {
-        server.userManager.active.removeUser(id);
-        server.notifier.notifyDisconnectedUser(id, username);
+        activeUserManager.removeUser(id);
+        notifier.notifyDisconnectedUser(id, username);
     }
 }

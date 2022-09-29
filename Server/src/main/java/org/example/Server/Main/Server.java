@@ -1,24 +1,32 @@
 package org.example.Server.Main;
 
 import org.example.Server.ActionCenter;
-import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.Messengers.MessageSenders.ServerSender;
 import org.example.Server.UserManager.UserManager;
-import org.example.Server.UserTaskManager;
+import org.example.User.Interfaces.UTaskManager;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server extends ServerHelpers {
+@Component
+public class Server {
     private ServerSocket server;
     private int serverCapacity;
     private final AtomicBoolean session = new AtomicBoolean();
 
-    public Server() {
-        initializeHelpers();
+    private final ServerListener listener;
+    private final ServerWriter writer;
+
+    public final static Console console = new Console();
+
+    public Server(UserManager userManager, UTaskManager uTaskManager,
+                  ServerNotifier serverNotifier, ServerMessenger serverMessenger) {
+        this.listener = new ServerListener(this, userManager, uTaskManager);
+        var actionCenter = new ActionCenter(this, serverNotifier, serverMessenger);
+        this.writer = new ServerWriter(this, actionCenter);
     }
 
     public void start(int port, int serverCapacity) throws IOException {
@@ -41,18 +49,6 @@ public class Server extends ServerHelpers {
         server.close();
 
         System.out.println("Server stopped successfully");
-    }
-
-    private void initializeHelpers() {
-        userManager = new UserManager();
-        broadcaster = new ServerBroadcaster(userManager);
-        notifier = new ServerNotifier(broadcaster);
-        messenger = new ServerMessenger(this);
-        listener = new ServerListener(this);
-        writer = new ServerWriter(this);
-        sender = new ServerSender(userManager);
-        actionCenter = new ActionCenter(this);
-        userTaskManager = new UserTaskManager(this);
     }
 
     protected ServerSocket getServer() {

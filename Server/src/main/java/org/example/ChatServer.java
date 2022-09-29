@@ -1,9 +1,11 @@
 package org.example;
 
 import org.example.Server.Main.Server;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class ChatServer {
 
     private final Server server;

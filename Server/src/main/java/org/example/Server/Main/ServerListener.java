@@ -1,8 +1,8 @@
 package org.example.Server.Main;
 
 import org.example.Server.UserManager.UserManager;
+import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -12,10 +12,12 @@ public class ServerListener {
 
     private final Server server;
     private final UserManager userManager;
+    private final UTaskManager uTaskManager;
 
-    public ServerListener(Server server) {
+    public ServerListener(Server server, UserManager userManager, UTaskManager uTaskManager) {
         this.server = server;
-        userManager = server.userManager;
+        this.userManager = userManager;
+        this.uTaskManager = uTaskManager;
     }
 
     public void startAsync() {
@@ -36,7 +38,7 @@ public class ServerListener {
                 sendCapacityReachedAlert(socket);
                 break;
             }
-            userManager.addUser(id, new User(id, socket, server.userTaskManager));
+            userManager.addUser(id, new User(id, socket, uTaskManager));
         }
     }
 

@@ -1,13 +1,20 @@
 package org.example.Server;
 
 import org.example.Server.Main.Server;
+import org.example.Server.Messengers.ServerMessenger;
+import org.example.Server.Messengers.ServerNotifier;
+
 
 public class ActionCenter {
 
     private final Server server;
+    private final ServerNotifier notifier;
+    private final ServerMessenger messenger;
 
-    public ActionCenter(Server server) {
+    public ActionCenter(Server server, ServerNotifier notifier, ServerMessenger messenger) {
         this.server = server;
+        this.notifier = notifier;
+        this.messenger = messenger;
     }
 
     public void execute(String input) {
@@ -40,7 +47,7 @@ public class ActionCenter {
         var command = filteredInput[1].toLowerCase();
         switch (command) {
             case "stop" -> {
-                server.notifier.notifyServerShutdownToUsers();
+                notifier.notifyServerShutdownToUsers();
                 server.getSession().set(false);
             }
             case "something" -> System.out.println("Do something here");
@@ -57,6 +64,6 @@ public class ActionCenter {
 
         var id = Integer.parseInt(filteredInput[1]);
         var message = filteredInput[2];
-        server.messenger.sendFromServerTo(id, message);
+        messenger.sendFromServerTo(id, message);
     }
 }

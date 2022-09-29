@@ -1,14 +1,15 @@
 package org.example.Server.Messengers.MessageSenders;
 
 import org.example.Server.UserManager.ActiveUserManager;
-import org.example.Server.UserManager.UserManager;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ServerSender {
 
     private final ActiveUserManager userManager;
 
-    public ServerSender(UserManager userManager) {
-        this.userManager = userManager.active;
+    public ServerSender(ActiveUserManager userManager) {
+        this.userManager = userManager;
     }
 
     public void sendFromServerTo(int toId, String message) {

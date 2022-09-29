@@ -1,5 +1,6 @@
 package org.example.Server.Main;
 
+import org.example.Server.ActionCenter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,9 +9,11 @@ import java.util.concurrent.CompletableFuture;
 public class ServerWriter {
 
     private final Server server;
+    private final ActionCenter actionCenter;
 
-    public ServerWriter(Server server) {
+    public ServerWriter(Server server, ActionCenter actionCenter) {
         this.server = server;
+        this.actionCenter = actionCenter;
     }
 
 
@@ -37,7 +40,7 @@ public class ServerWriter {
     }
 
     private void execute(String input) {
-        server.actionCenter.execute(input);
+        actionCenter.execute(input);
     }
 
     private BufferedReader getBufferedReader() {
