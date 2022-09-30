@@ -36,8 +36,6 @@ public class User {
         dos.close();
         socket.close();
         taskManager.notifyUserExit(id, username);
-
-        System.out.println(username + " disconnected");
     }
 
     private void initiateHelperClasses() {
