@@ -36,7 +36,9 @@ public class ClientWriter {
         //  1. Sending username to server
         //  2. Checking outgoing messages
         //  3. Sending outgoing message
-        sendUsernameToServer(buffReader);
+
+        if (client.getSession().get())
+            sendUsernameToServer(buffReader);
 
         var message = "";
         while (client.getSession().get()) {
