@@ -2,6 +2,8 @@ package org.example.Server.Main;
 
 import org.example.Server.Main.Writer.CommandCenter;
 import org.example.Server.Main.Writer.ServerWriter;
+import org.example.Server.Messengers.ServerMessenger;
+import org.example.Server.Messengers.ServerNotifier;
 import org.example.Server.UserManager.UserManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.springframework.stereotype.Component;
@@ -21,8 +23,10 @@ public class Server {
 
     public final static Console console = new Console();
 
-    public Server(UserManager userManager, UTaskManager uTaskManager, CommandCenter commandCenter) {
+    public Server(UserManager userManager, UTaskManager uTaskManager, ServerNotifier notifier,
+                  ServerMessenger messenger) {
         this.socketFactory = new SocketFactory(this, userManager, uTaskManager);
+        var commandCenter = new CommandCenter(this, notifier, messenger);
         this.writer = new ServerWriter(this, commandCenter);
     }
 
