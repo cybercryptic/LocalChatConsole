@@ -1,23 +1,25 @@
-package org.example.Server;
+package org.example.Server.Main.Writer;
 
 import org.example.Server.Main.Server;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
 
+import java.io.IOException;
 
-public class ActionCenter {
+
+public class CommandCenter {
 
     private final Server server;
     private final ServerNotifier notifier;
     private final ServerMessenger messenger;
 
-    public ActionCenter(Server server, ServerNotifier notifier, ServerMessenger messenger) {
+    public CommandCenter(Server server, ServerNotifier notifier, ServerMessenger messenger) {
         this.server = server;
         this.notifier = notifier;
         this.messenger = messenger;
     }
 
-    public void execute(String input) {
+    public void execute(String input) throws IOException {
         if (input.trim().isEmpty()) return;
 
         var filteredInput = input.trim().split(" ", 3);
@@ -37,7 +39,7 @@ public class ActionCenter {
                 """);
     }
 
-    private void executeCommand(String[] filteredInput) {
+    private void executeCommand(String[] filteredInput) throws IOException {
         if (filteredInput.length != 2) {
             System.out.println("Invalid command syntax");
             System.out.println("-h for help");
@@ -48,7 +50,7 @@ public class ActionCenter {
         switch (command) {
             case "stop" -> {
                 notifier.notifyServerShutdownToUsers();
-                server.getSession().set(false);
+                server.stop();
             }
             case "something" -> System.out.println("Do something here");
             default -> System.out.println("Invalid command \n use -h for help");

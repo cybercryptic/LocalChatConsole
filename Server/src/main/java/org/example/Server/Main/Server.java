@@ -1,8 +1,7 @@
 package org.example.Server.Main;
 
-import org.example.Server.ActionCenter;
-import org.example.Server.Messengers.ServerMessenger;
-import org.example.Server.Messengers.ServerNotifier;
+import org.example.Server.Main.Writer.CommandCenter;
+import org.example.Server.Main.Writer.ServerWriter;
 import org.example.Server.UserManager.UserManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.springframework.stereotype.Component;
@@ -17,16 +16,14 @@ public class Server {
     private int serverCapacity;
     private final AtomicBoolean session = new AtomicBoolean();
 
-    private final ServerListener listener;
+    private final SocketFactory socketFactory;
     private final ServerWriter writer;
 
     public final static Console console = new Console();
 
-    public Server(UserManager userManager, UTaskManager uTaskManager,
-                  ServerNotifier serverNotifier, ServerMessenger serverMessenger) {
-        this.listener = new ServerListener(this, userManager, uTaskManager);
-        var actionCenter = new ActionCenter(this, serverNotifier, serverMessenger);
-        this.writer = new ServerWriter(this, actionCenter);
+    public Server(UserManager userManager, UTaskManager uTaskManager, CommandCenter commandCenter) {
+        this.socketFactory = new SocketFactory(this, userManager, uTaskManager);
+        this.writer = new ServerWriter(this, commandCenter);
     }
 
     public void start(int port, int serverCapacity) throws IOException {
@@ -38,7 +35,7 @@ public class Server {
     }
 
     public void startListener() {
-        listener.startAsync();
+        socketFactory.startAsync();
     }
 
     public void startWriter() {

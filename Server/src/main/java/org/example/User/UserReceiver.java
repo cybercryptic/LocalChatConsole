@@ -10,11 +10,14 @@ public class UserReceiver {
 
     private final User user;
     private final int id;
+    private final DataInputStream dis;
     private final URTaskManager taskManager;
 
-    public UserReceiver(User user, URTaskManager URTaskManager) {
+    public UserReceiver(User user, URTaskManager URTaskManager) throws IOException {
         this.user = user;
         id = user.getId();
+        dis = getDis();
+
         this.taskManager = URTaskManager;
     }
 
@@ -29,11 +32,6 @@ public class UserReceiver {
     }
 
     private void start() throws IOException {
-        var dis = getDis();
-
-        var username = dis.readUTF();
-        setUsernameNNotify(username);
-
         var message = "";
         while (true) {
             message = dis.readUTF();
@@ -41,15 +39,14 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            taskManager.broadcastMessage(id, username, message);
+            taskManager.broadcastMessage(id, user.getUsername(), message);
         }
 
         dis.close();
     }
 
-    private void setUsernameNNotify(String username) {
-        user.setUsername(username);
-        taskManager.notifyNewUser(user);
+    public String getUsername() throws IOException {
+        return dis.readUTF();
     }
 
     private DataInputStream getDis() throws IOException {

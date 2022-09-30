@@ -7,16 +7,14 @@ import org.example.User.User;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-public class ServerListener {
+public class SocketFactory {
 
     private int noOfUsers;
     private final Server server;
     private final UserManager userManager;
     private final UTaskManager uTaskManager;
 
-    // TODO: Change name to SocketFactory
-
-    public ServerListener(Server server, UserManager userManager, UTaskManager uTaskManager) {
+    public SocketFactory(Server server, UserManager userManager, UTaskManager uTaskManager) {
         this.server = server;
         this.userManager = userManager;
         this.uTaskManager = uTaskManager;
@@ -42,7 +40,10 @@ public class ServerListener {
                 continue;
             }
             user.sendMessage("true");
+            user.start();
             userManager.addUser(id, user);
+            // TODO: noOfUsers is not being updated
+            //  after users disconnected from group.
             noOfUsers++;
         }
     }
@@ -63,5 +64,13 @@ public class ServerListener {
 
     private int getRandomId() {
         return (int) (Math.random() * server.getServerCapacity());
+    }
+
+    public int getNoOfUsers() {
+        return noOfUsers;
+    }
+
+    public void setNoOfUsers(int noOfUsers) {
+        this.noOfUsers = noOfUsers;
     }
 }

@@ -25,6 +25,11 @@ public class User {
         setDos();
 
         initiateHelperClasses();
+    }
+
+    public void start() throws IOException {
+        username = receiver.getUsername();
+        taskManager.notifyNewUser(this);
         receiver.startAsync();
     }
 
@@ -35,10 +40,10 @@ public class User {
     public void stop() throws IOException {
         dos.close();
         socket.close();
-        taskManager.notifyUserExit(id, username);
+        taskManager.notifyUserExit(this);
     }
 
-    private void initiateHelperClasses() {
+    private void initiateHelperClasses() throws IOException {
         receiver = new UserReceiver(this, (URTaskManager)taskManager);
         sender = new UserSender(this);
     }
@@ -49,10 +54,6 @@ public class User {
 
     public String getUsername() {
         return username;
-    }
-
-    protected void setUsername(String username) {
-        this.username = username;
     }
 
     protected DataOutputStream getDos() {
