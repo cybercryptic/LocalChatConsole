@@ -8,22 +8,21 @@ public class Client {
 
     private Socket socket;
     private final AtomicBoolean session = new AtomicBoolean();
-    private ClientListener listener;
-    private ClientWriter writer;
+    public final ClientReceiver receiver;
+    public final ClientWriter writer;
 
-    public Client() {
-        initiateHelpers();
+    public Client(String host, int port) throws IOException {
+        start(host, port);
+        receiver = new ClientReceiver(this);
+        writer = new ClientWriter(this);
     }
 
-    public void start(String host, int port) {
+    private void start(String host, int port) {
         System.out.println("Connecting to Server host: " + host + " Port: " + port);
+        System.out.println("CTRL + C to stop");
         socket = connectToServerWith(host, port);
         session.set(true);
         System.out.println("Connected to server successfully");
-    }
-
-    public void startListener() {
-        listener.startAsync(writer);
     }
 
     public void stop() throws IOException {
@@ -31,12 +30,6 @@ public class Client {
         socket.close();
 
         System.out.println("Closed successfully");
-    }
-
-
-    private void initiateHelpers() {
-        listener = new ClientListener(this);
-        writer = new ClientWriter(this);
     }
 
     private Socket connectToServerWith(String host, int port) {

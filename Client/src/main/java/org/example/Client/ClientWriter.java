@@ -8,11 +8,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class ClientWriter {
 
-    private final Client client;
-    private DataOutputStream dos;
+    // TODO: ClientWriter name needs to change to appropriate name
+    // TODO: ClientWriter needs CommandCenter and TaskManger Like classes to Execute input
 
-    public ClientWriter(Client client) {
+    private final DataOutputStream dos;
+    private final BufferedReader buffReader;
+    private final Client client;
+
+    public ClientWriter(Client client) throws IOException {
         this.client = client;
+        buffReader = getBuffReader();
+        dos = getDos();
     }
 
     public void startAsync() {
@@ -26,9 +32,10 @@ public class ClientWriter {
     }
 
     private void start() throws IOException {
-        dos = getDos();
-        var buffReader = getBuffReader();
-
+        // TODO: (Violating Single Responsibility principal)
+        //  1. Sending username to server
+        //  2. Checking outgoing messages
+        //  3. Sending outgoing message
         sendUsernameToServer(buffReader);
 
         var message = "";
@@ -41,6 +48,7 @@ public class ClientWriter {
         dos.close();
         buffReader.close();
     }
+
     private void sendMessage(String message) throws IOException {
         dos.writeUTF(message);
         dos.flush();
