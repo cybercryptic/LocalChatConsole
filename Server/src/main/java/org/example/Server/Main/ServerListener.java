@@ -14,6 +14,8 @@ public class ServerListener {
     private final UserManager userManager;
     private final UTaskManager uTaskManager;
 
+    // TODO: Change name to SocketFactory
+
     public ServerListener(Server server, UserManager userManager, UTaskManager uTaskManager) {
         this.server = server;
         this.userManager = userManager;
@@ -52,12 +54,14 @@ public class ServerListener {
     private int getId() {
         while (true) {
             var id = getRandomId();
+            // TODO: Here only userManger is being checked but,
+            //  in Active userManager also there will be users.
             if (userManager.containsId(id)) continue;
             return id;
         }
     }
 
     private int getRandomId() {
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * server.getServerCapacity());
     }
 }
