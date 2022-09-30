@@ -3,6 +3,7 @@ package org.example.Server.Main;
 import org.example.Server.UserManager.UserManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
+
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -30,14 +31,10 @@ public class ServerListener {
     }
 
     private void listener() throws IOException {
-        while (server.getSession().get()) {
+        while (server.getSession().get() && areUsersUnderCapacity()) {
             var id = getId();
             var socket = server.getServer().accept();
             var user = new User(id, socket, uTaskManager);
-            if (!areUsersUnderCapacity()) {
-                // TODO: Fix HERE
-                continue;
-            }
             userManager.addUser(id, user);
             noOfUsers++;
         }
