@@ -12,15 +12,17 @@ public class Client {
     public final ClientWriter writer;
 
     public Client(String host, int port) throws IOException {
-        start(host, port);
+        setServer(host, port);
         receiver = new ClientReceiver(this);
         writer = new ClientWriter(this);
+        start();
     }
 
-    private void start(String host, int port) {
-        System.out.println("Connecting to Server host: " + host + " Port: " + port);
-        System.out.println("CTRL + C to stop");
-        socket = connectToServerWith(host, port);
+    private void start() throws IOException {
+        if (!receiver.isRequestAccepted()) {
+            System.out.println("Server might be busy!! Cannot connect.\nTry Again later...");
+            return;
+        }
         session.set(true);
         System.out.println("Connected to server successfully");
     }
@@ -53,6 +55,12 @@ public class Client {
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private void setServer(String host, int port) {
+        System.out.println("Connecting to Server host: " + host + " Port: " + port);
+        System.out.println("CTRL + C to stop");
+        socket = connectToServerWith(host, port);
     }
 
     public Socket getSocket() {

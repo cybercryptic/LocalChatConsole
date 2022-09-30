@@ -42,6 +42,10 @@ public class ClientReceiver {
         dis.close();
     }
 
+    public boolean isRequestAccepted() throws IOException {
+        return Boolean.parseBoolean(dis.readUTF());
+    }
+
     private DataInputStream getDis() throws IOException {
         return new DataInputStream(client.getSocket().getInputStream());
     }

@@ -31,10 +31,15 @@ public class ServerListener {
     }
 
     private void listener() throws IOException {
-        while (server.getSession().get() && areUsersUnderCapacity()) {
+        while (server.getSession().get()) {
             var id = getId();
             var socket = server.getServer().accept();
             var user = new User(id, socket, uTaskManager);
+            if (!areUsersUnderCapacity()) {
+                user.sendMessage("false");
+                continue;
+            }
+            user.sendMessage("true");
             userManager.addUser(id, user);
             noOfUsers++;
         }
