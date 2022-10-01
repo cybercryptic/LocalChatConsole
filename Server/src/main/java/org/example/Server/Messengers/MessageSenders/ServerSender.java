@@ -1,14 +1,14 @@
 package org.example.Server.Messengers.MessageSenders;
 
-import org.example.Server.UserManager.ActiveUserManager;
+import org.example.Server.UserManager.ActiveUsersManager;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ServerSender {
 
-    private final ActiveUserManager userManager;
+    private final ActiveUsersManager userManager;
 
-    public ServerSender(ActiveUserManager userManager) {
+    public ServerSender(ActiveUsersManager userManager) {
         this.userManager = userManager;
     }
 

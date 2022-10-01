@@ -1,6 +1,6 @@
 package org.example.Server.Main;
 
-import org.example.Server.UserManager.UserManager;
+import org.example.Server.UserManager.ConnectedUsersManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
 
@@ -11,12 +11,12 @@ public class SocketFactory {
 
     private int noOfUsers;
     private final Server server;
-    private final UserManager userManager;
+    private final ConnectedUsersManager connectedUsersManager;
     private final UTaskManager uTaskManager;
 
-    public SocketFactory(Server server, UserManager userManager, UTaskManager uTaskManager) {
+    public SocketFactory(Server server, ConnectedUsersManager connectedUsersManager, UTaskManager uTaskManager) {
         this.server = server;
-        this.userManager = userManager;
+        this.connectedUsersManager = connectedUsersManager;
         this.uTaskManager = uTaskManager;
     }
 
@@ -41,7 +41,7 @@ public class SocketFactory {
             }
             user.sendMessage("true");
             user.start();
-            userManager.addUser(id, user);
+            connectedUsersManager.addUser(id, user);
             // TODO: noOfUsers is not being updated
             //  after users disconnected from group.
             noOfUsers++;
@@ -57,7 +57,7 @@ public class SocketFactory {
             var id = getRandomId();
             // TODO: Here only userManger is being checked but,
             //  in Active userManager also there will be users.
-            if (userManager.containsId(id)) continue;
+            if (connectedUsersManager.containsId(id)) continue;
             return id;
         }
     }

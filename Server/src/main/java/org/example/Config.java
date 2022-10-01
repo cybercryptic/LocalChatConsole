@@ -4,8 +4,8 @@ import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
 import org.example.Server.Messengers.MessageSenders.ServerSender;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.UserManager.ActiveUserManager;
-import org.example.Server.UserManager.UserManager;
+import org.example.Server.UserManager.ActiveUsersManager;
+import org.example.Server.UserManager.ConnectedUsersManager;
 import org.example.Server.UserTaskManager;
 import org.example.User.Interfaces.URTaskManager;
 import org.example.User.Interfaces.UTaskManager;
@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @ComponentScan("org.example")
 public class Config {
 
-    private final UserManager manager = new UserManager();
-    private final ActiveUserManager activeManager = new ActiveUserManager();
+    private final ConnectedUsersManager manager = new ConnectedUsersManager();
+    private final ActiveUsersManager activeManager = new ActiveUsersManager();
     private final ServerSender sender = new ServerSender(activeManager);
     private final ServerBroadcaster broadcaster = new ServerBroadcaster(activeManager);
     private final ServerMessenger messenger = new ServerMessenger(sender, broadcaster);
@@ -26,12 +26,12 @@ public class Config {
     private final UserTaskManager taskManager = new UserTaskManager(manager, activeManager, notifier, messenger);
 
     @Bean
-    public UserManager userManager() {
+    public ConnectedUsersManager userManager() {
         return manager;
     }
 
     @Bean
-    public ActiveUserManager activeUserManager() {
+    public ActiveUsersManager activeUserManager() {
         return activeManager;
     }
 

@@ -33,10 +33,13 @@ public class CommandCenter {
 
     private void printHelp() {
         System.out.println("""
-                -u [id] [message]
-                -c [command]
-                -h Print help message & exit
+                usr [id] [message]
+                set [property] [value]
+                cmd [command]
+                help Print help message & exit
                 """);
+
+        // TODO: Code these commands
     }
 
     private void executeCommand(String[] filteredInput) throws IOException {
@@ -48,13 +51,15 @@ public class CommandCenter {
 
         var command = filteredInput[1].toLowerCase();
         switch (command) {
-            case "stop" -> {
-                notifier.notifyServerShutdownToUsers();
-                server.stop();
-            }
+            case "stop" -> stopServer();
             case "something" -> System.out.println("Do something here");
             default -> System.out.println("Invalid command \n use -h for help");
         }
+    }
+
+    private void stopServer() throws IOException {
+        notifier.notifyServerShutdownToUsers();
+        server.stop();
     }
 
     private void sendMessage(String[] filteredInput) {

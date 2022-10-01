@@ -5,7 +5,8 @@ import org.example.User.User;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ActiveUserManager {
+public class ConnectedUsersManager {
+
     private final ConcurrentHashMap<Integer, User> users = new ConcurrentHashMap<>();
 
     public void addUser(int id, User user) {

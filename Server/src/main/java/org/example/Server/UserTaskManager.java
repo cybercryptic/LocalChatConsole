@@ -2,23 +2,23 @@ package org.example.Server;
 
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.UserManager.ActiveUserManager;
-import org.example.Server.UserManager.UserManager;
+import org.example.Server.UserManager.ActiveUsersManager;
+import org.example.Server.UserManager.ConnectedUsersManager;
 import org.example.User.Interfaces.URTaskManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.example.User.User;
 
 public class UserTaskManager implements UTaskManager, URTaskManager {
 
-    private final UserManager userManager;
-    private final ActiveUserManager activeUserManager;
+    private final ConnectedUsersManager connectedUsersManager;
+    private final ActiveUsersManager activeUsersManager;
     private final ServerNotifier notifier;
     private final ServerMessenger messenger;
 
-    public UserTaskManager(UserManager userManager, ActiveUserManager activeUserManager, ServerNotifier notifier,
+    public UserTaskManager(ConnectedUsersManager connectedUsersManager, ActiveUsersManager activeUsersManager, ServerNotifier notifier,
                            ServerMessenger messenger) {
-        this.userManager = userManager;
-        this.activeUserManager = activeUserManager;
+        this.connectedUsersManager = connectedUsersManager;
+        this.activeUsersManager = activeUsersManager;
         this.notifier = notifier;
         this.messenger = messenger;
     }
@@ -28,8 +28,8 @@ public class UserTaskManager implements UTaskManager, URTaskManager {
         var id = user.getId();
         var username = user.getUsername();
 
-        userManager.removeUser(id);
-        activeUserManager.addUser(id, user);
+        connectedUsersManager.removeUser(id);
+        activeUsersManager.addUser(id, user);
         notifier.notifyNewUser(id, username);
     }
 
@@ -40,7 +40,7 @@ public class UserTaskManager implements UTaskManager, URTaskManager {
 
     @Override
     public void notifyUserExit(User user) {
-        activeUserManager.removeUser(user.getId());
+        activeUsersManager.removeUser(user.getId());
         notifier.notifyDisconnectedUser(user.getId(), user.getUsername());
     }
 }

@@ -4,7 +4,7 @@ import org.example.Server.Main.Writer.CommandCenter;
 import org.example.Server.Main.Writer.ServerWriter;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.UserManager.UserManager;
+import org.example.Server.UserManager.ConnectedUsersManager;
 import org.example.User.Interfaces.UTaskManager;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +23,9 @@ public class Server {
 
     public final static Console console = new Console();
 
-    public Server(UserManager userManager, UTaskManager uTaskManager, ServerNotifier notifier,
+    public Server(ConnectedUsersManager connectedUsersManager, UTaskManager uTaskManager, ServerNotifier notifier,
                   ServerMessenger messenger) {
-        this.socketFactory = new SocketFactory(this, userManager, uTaskManager);
+        this.socketFactory = new SocketFactory(this, connectedUsersManager, uTaskManager);
         var commandCenter = new CommandCenter(this, notifier, messenger);
         this.writer = new ServerWriter(this, commandCenter);
     }
