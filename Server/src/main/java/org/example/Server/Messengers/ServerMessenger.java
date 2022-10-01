@@ -28,7 +28,7 @@ public class ServerMessenger {
 
     public void broadcastToGroupUsers(int fromId, String username, String message) {
         var usrMessage = "[" + username + "]: " + message;
-        broadcaster.broadcastExcept(usrMessage, fromId);
+        broadcaster.broadcastExcept(fromId, usrMessage);
         Server.console.print(fromId + "> " + username + ": " + message);
     }
 }

@@ -13,13 +13,25 @@ public class ServerBroadcaster {
     }
 
     public void broadcast(String message) {
-        for (var user : manager.getUsers()) {
+        var users = manager.getUsers();
+        if (users.isEmpty()) {
+            System.out.println("No active users to send any message.");
+            return;
+        }
+
+        for (var user : users) {
             user.sendMessage(message);
         }
     }
 
-    public void broadcastExcept(String message, int IgnoreId) {
-        for (var user : manager.getUsers()) {
+    public void broadcastExcept(int IgnoreId, String message) {
+        var users = manager.getUsers();
+        if (users.isEmpty()) {
+            System.out.println("No active users to send any message.");
+            return;
+        }
+
+        for (var user : users) {
             if (user.getId() == IgnoreId) continue;
             user.sendMessage(message);
         }
