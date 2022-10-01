@@ -12,12 +12,12 @@ public class ConnectedUsersManager {
 
     public void addUser(int id, User user) {
         users.putIfAbsent(id, user);
-        noOfUsers.getAndIncrement();
+        noOfUsers.incrementAndGet();
     }
 
     public void removeUser(int id) {
         users.remove(id);
-        noOfUsers.getAndDecrement();
+        noOfUsers.decrementAndGet();
     }
 
     public boolean containsId(int id) {

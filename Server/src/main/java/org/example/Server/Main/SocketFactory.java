@@ -44,8 +44,12 @@ public class SocketFactory {
     }
 
     private boolean areUsersUnderCapacity() {
-        var size = userManager.getNoOfUsers().get();
-        return size < server.getServerCapacity();
+        var size = getSize();
+        return size < server.getServerCapacity().get();
+    }
+
+    private int getSize() {
+        return userManager.getActiveUsersSize().get() + userManager.getConnectedUsersSize().get();
     }
 
     private int getId() {
@@ -57,6 +61,6 @@ public class SocketFactory {
     }
 
     private int getRandomId() {
-        return (int) (Math.random() * server.getServerCapacity());
+        return (int) (Math.random() * server.getServerCapacity().get());
     }
 }

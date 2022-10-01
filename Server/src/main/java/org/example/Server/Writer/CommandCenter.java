@@ -32,7 +32,7 @@ public class CommandCenter {
 
         switch (command) {
             case "usr" -> new USRCommand(messenger).execute(input);
-            case "set" -> new SETCommand().execute(input);
+            case "set" -> new SETCommand(server).execute(input);
             case "cmd" -> new CMDCommand().execute(input);
             case "help" -> new HelpCommand().execute();
             default -> System.out.println("-h for help");

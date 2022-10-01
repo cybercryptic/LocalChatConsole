@@ -11,11 +11,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class Server {
     private ServerSocket server;
-    private int serverCapacity;
+    private final AtomicInteger serverCapacity = new AtomicInteger();
     private final AtomicBoolean session = new AtomicBoolean();
 
     private final SocketFactory socketFactory;
@@ -32,13 +33,13 @@ public class Server {
 
     public void start(int port, int serverCapacity) throws IOException {
         server = new ServerSocket(port);
-        this.serverCapacity = serverCapacity;
+        this.serverCapacity.set(serverCapacity);
         session.set(true);
 
         System.out.println("Server started successfully");
     }
 
-    public void startListener() {
+    public void startSocketFactory() {
         socketFactory.startAsync();
     }
 
@@ -54,7 +55,7 @@ public class Server {
         return server;
     }
 
-    protected int getServerCapacity() {
+    public AtomicInteger getServerCapacity() {
         return serverCapacity;
     }
 
