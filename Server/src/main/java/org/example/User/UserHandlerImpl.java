@@ -1,21 +1,20 @@
-package org.example.Server;
+package org.example.User;
 
-import org.example.Server.Messengers.ServerMessenger;
-import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.UserManager.ActiveUsersManager;
-import org.example.Server.UserManager.ConnectedUsersManager;
-import org.example.User.Interfaces.URTaskManager;
-import org.example.User.Interfaces.UTaskManager;
-import org.example.User.User;
+import org.example.Server.Communicators.ServerMessenger;
+import org.example.Server.Communicators.ServerNotifier;
+import org.example.User.Interfaces.URHandler;
+import org.example.User.Main.User;
+import org.example.UserManager.ActiveUsersManager;
+import org.example.UserManager.ConnectedUsersManager;
 
-public class UserTaskManager implements UTaskManager, URTaskManager {
+public class UserHandlerImpl implements org.example.User.Interfaces.UserHandler, URHandler {
 
     private final ConnectedUsersManager connectedUsersManager;
     private final ActiveUsersManager activeUsersManager;
     private final ServerNotifier notifier;
     private final ServerMessenger messenger;
 
-    public UserTaskManager(ConnectedUsersManager connectedUsersManager, ActiveUsersManager activeUsersManager, ServerNotifier notifier,
+    public UserHandlerImpl(ConnectedUsersManager connectedUsersManager, ActiveUsersManager activeUsersManager, ServerNotifier notifier,
                            ServerMessenger messenger) {
         this.connectedUsersManager = connectedUsersManager;
         this.activeUsersManager = activeUsersManager;
@@ -26,21 +25,19 @@ public class UserTaskManager implements UTaskManager, URTaskManager {
     @Override
     public void notifyNewUser(User user) {
         var id = user.getId();
-        var username = user.getUsername();
-
         connectedUsersManager.removeUser(id);
         activeUsersManager.addUser(id, user);
-        notifier.notifyNewUser(id, username);
+        notifier.notifyNewUser(user);
     }
 
     @Override
-    public void broadcastMessage(int id, String username, String message) {
+    public void broadcastToGroupUsers(int id, String username, String message) {
         messenger.broadcastToGroupUsers(id, username, message);
     }
 
     @Override
     public void notifyUserExit(User user) {
         activeUsersManager.removeUser(user.getId());
-        notifier.notifyDisconnectedUser(user.getId(), user.getUsername());
+        notifier.notifyDisconnectedUser(user);
     }
 }

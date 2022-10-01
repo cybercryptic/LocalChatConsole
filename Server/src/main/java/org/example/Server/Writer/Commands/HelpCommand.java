@@ -1,6 +1,6 @@
-package org.example.Server.Main.Writer.Commands;
+package org.example.Server.Writer.Commands;
 
-import org.example.Server.Main.Writer.Commands.Interfaces.Command;
+import org.example.Server.Writer.Commands.Interfaces.Command;
 
 public class HelpCommand implements Command {
 

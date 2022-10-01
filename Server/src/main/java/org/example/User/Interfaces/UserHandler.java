@@ -1,8 +1,8 @@
 package org.example.User.Interfaces;
 
-import org.example.User.User;
+import org.example.User.Main.User;
 
-public interface UTaskManager {
+public interface UserHandler {
     void notifyNewUser(User user);
     void notifyUserExit(User user);
 }

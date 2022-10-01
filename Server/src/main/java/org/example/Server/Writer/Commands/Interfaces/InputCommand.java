@@ -1,4 +1,4 @@
-package org.example.Server.Main.Writer.Commands.Interfaces;
+package org.example.Server.Writer.Commands.Interfaces;
 
 public interface InputCommand {
     void execute(String inputList);

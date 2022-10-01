@@ -1,7 +1,7 @@
-package org.example.User;
+package org.example.User.Main;
 
-import org.example.User.Interfaces.URTaskManager;
-import org.example.User.Interfaces.UTaskManager;
+import org.example.User.Interfaces.URHandler;
+import org.example.User.Interfaces.UserHandler;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,23 +13,23 @@ public class User {
     private String username;
     private final Socket socket;
     private DataOutputStream dos;
-    private final UTaskManager taskManager;
+    private final UserHandler handler;
     private UserReceiver receiver;
     private UserSender sender;
 
-    public User(int id, Socket socket, UTaskManager taskManager) throws IOException {
+    public User(int id, Socket socket, UserHandler handler) throws IOException {
         this.id = id;
         this.socket = socket;
-        this.taskManager = taskManager;
+        this.handler = handler;
 
         setDos();
 
         initiateHelperClasses();
     }
 
-    public void start() throws IOException {
+    private void start() throws IOException {
         username = receiver.getUsername();
-        taskManager.notifyNewUser(this);
+        handler.notifyNewUser(this);
         receiver.startAsync();
     }
 
@@ -37,14 +37,19 @@ public class User {
         sender.sendMessage(message);
     }
 
+    public void isUserAllowed(String isAllowed) throws IOException {
+        sendMessage(isAllowed);
+        if (isAllowed.equals("true")) start();
+    }
+
     public void stop() throws IOException {
         dos.close();
         socket.close();
-        taskManager.notifyUserExit(this);
+        handler.notifyUserExit(this);
     }
 
     private void initiateHelperClasses() throws IOException {
-        receiver = new UserReceiver(this, (URTaskManager)taskManager);
+        receiver = new UserReceiver(this, (URHandler) handler);
         sender = new UserSender(this);
     }
 

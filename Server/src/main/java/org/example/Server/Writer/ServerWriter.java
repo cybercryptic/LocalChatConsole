@@ -1,4 +1,4 @@
-package org.example.Server.Main.Writer;
+package org.example.Server.Writer;
 
 import org.example.Server.Main.Server;
 

@@ -1,14 +1,15 @@
 package org.example;
 
-import org.example.Server.Messengers.Server.MessageSenders.ServerBroadcaster;
-import org.example.Server.Messengers.Server.MessageSenders.ServerSender;
-import org.example.Server.Messengers.ServerMessenger;
-import org.example.Server.Messengers.ServerNotifier;
-import org.example.Server.UserManager.ActiveUsersManager;
-import org.example.Server.UserManager.ConnectedUsersManager;
-import org.example.Server.UserTaskManager;
-import org.example.User.Interfaces.URTaskManager;
-import org.example.User.Interfaces.UTaskManager;
+import org.example.Server.Communicators.ServerBroadcaster;
+import org.example.Server.Communicators.ServerMessenger;
+import org.example.Server.Communicators.ServerNotifier;
+import org.example.Server.Communicators.ServerSender;
+import org.example.User.Interfaces.URHandler;
+import org.example.User.Interfaces.UserHandler;
+import org.example.User.UserHandlerImpl;
+import org.example.UserManager.ActiveUsersManager;
+import org.example.UserManager.ConnectedUsersManager;
+import org.example.UserManager.UserManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
@@ -17,22 +18,28 @@ import org.springframework.stereotype.Component;
 @ComponentScan("org.example")
 public class Config {
 
-    private final ConnectedUsersManager manager = new ConnectedUsersManager();
-    private final ActiveUsersManager activeManager = new ActiveUsersManager();
-    private final ServerSender sender = new ServerSender(activeManager);
-    private final ServerBroadcaster broadcaster = new ServerBroadcaster(activeManager);
+    private final ConnectedUsersManager connectedUsersManager = new ConnectedUsersManager();
+    private final ActiveUsersManager activeUsersManager = new ActiveUsersManager();
+    private final UserManager userManager = new UserManager(connectedUsersManager, activeUsersManager);
+    private final ServerSender sender = new ServerSender(activeUsersManager);
+    private final ServerBroadcaster broadcaster = new ServerBroadcaster(activeUsersManager);
     private final ServerMessenger messenger = new ServerMessenger(sender, broadcaster);
     private final ServerNotifier notifier = new ServerNotifier(broadcaster);
-    private final UserTaskManager taskManager = new UserTaskManager(manager, activeManager, notifier, messenger);
+    private final UserHandlerImpl taskManager = new UserHandlerImpl(connectedUsersManager, activeUsersManager, notifier, messenger);
 
     @Bean
-    public ConnectedUsersManager userManager() {
-        return manager;
+    public ConnectedUsersManager connectedUsersManager() {
+        return connectedUsersManager;
     }
 
     @Bean
-    public ActiveUsersManager activeUserManager() {
-        return activeManager;
+    public ActiveUsersManager activeUsersManager() {
+        return activeUsersManager;
+    }
+
+    @Bean
+    public UserManager userManager() {
+        return userManager;
     }
 
     @Bean
@@ -56,17 +63,17 @@ public class Config {
     }
 
     @Bean
-    public UserTaskManager taskManager() {
+    public UserHandlerImpl userHandlerImpl() {
         return taskManager;
     }
 
     @Bean
-    public UTaskManager uTaskManager() {
+    public UserHandler userHandler() {
         return taskManager;
     }
 
     @Bean
-    public URTaskManager urTaskManager() {
+    public URHandler urHandler() {
         return taskManager;
     }
 }

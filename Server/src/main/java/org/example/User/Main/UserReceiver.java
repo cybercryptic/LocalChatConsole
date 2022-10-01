@@ -1,6 +1,6 @@
-package org.example.User;
+package org.example.User.Main;
 
-import org.example.User.Interfaces.URTaskManager;
+import org.example.User.Interfaces.URHandler;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -11,14 +11,14 @@ public class UserReceiver {
     private final User user;
     private final int id;
     private final DataInputStream dis;
-    private final URTaskManager taskManager;
+    private final URHandler handler;
 
-    public UserReceiver(User user, URTaskManager URTaskManager) throws IOException {
+    public UserReceiver(User user, URHandler URHandler) throws IOException {
         this.user = user;
         id = user.getId();
         dis = getDis();
 
-        this.taskManager = URTaskManager;
+        this.handler = URHandler;
     }
 
     public void startAsync() {
@@ -39,7 +39,7 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            taskManager.broadcastMessage(id, user.getUsername(), message);
+            handler.broadcastToGroupUsers(id, user.getUsername(), message);
         }
 
         dis.close();

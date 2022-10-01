@@ -1,6 +1,6 @@
-package org.example.Server.Messengers.Server.MessageSenders;
+package org.example.Server.Communicators;
 
-import org.example.Server.UserManager.ActiveUsersManager;
+import org.example.UserManager.ActiveUsersManager;
 import org.springframework.stereotype.Component;
 
 @Component

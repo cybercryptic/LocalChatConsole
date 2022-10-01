@@ -1,12 +1,12 @@
-package org.example.Server.Main.Writer;
+package org.example.Server.Writer;
 
+import org.example.Server.Communicators.ServerMessenger;
+import org.example.Server.Communicators.ServerNotifier;
 import org.example.Server.Main.Server;
-import org.example.Server.Main.Writer.Commands.CMDCommand;
-import org.example.Server.Main.Writer.Commands.HelpCommand;
-import org.example.Server.Main.Writer.Commands.SETCommand;
-import org.example.Server.Main.Writer.Commands.USRCommand;
-import org.example.Server.Messengers.ServerMessenger;
-import org.example.Server.Messengers.ServerNotifier;
+import org.example.Server.Writer.Commands.CMDCommand;
+import org.example.Server.Writer.Commands.HelpCommand;
+import org.example.Server.Writer.Commands.SETCommand;
+import org.example.Server.Writer.Commands.USRCommand;
 
 import java.io.IOException;
 
@@ -36,21 +36,6 @@ public class CommandCenter {
             case "cmd" -> new CMDCommand().execute(input);
             case "help" -> new HelpCommand().execute();
             default -> System.out.println("-h for help");
-        }
-    }
-
-    private void executeCommand(String[] filteredInput) throws IOException {
-        if (filteredInput.length != 2) {
-            System.out.println("Invalid command syntax");
-            System.out.println("-h for help");
-            return;
-        }
-
-        var command = filteredInput[1].toLowerCase();
-        switch (command) {
-            case "stop" -> stopServer();
-            case "something" -> System.out.println("Do something here");
-            default -> System.out.println("Invalid command \n use -h for help");
         }
     }
 

@@ -1,4 +1,4 @@
-package org.example.User;
+package org.example.User.Main;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;

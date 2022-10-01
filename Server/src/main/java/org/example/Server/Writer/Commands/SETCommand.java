@@ -1,6 +1,6 @@
-package org.example.Server.Main.Writer.Commands;
+package org.example.Server.Writer.Commands;
 
-import org.example.Server.Main.Writer.Commands.Interfaces.InputCommand;
+import org.example.Server.Writer.Commands.Interfaces.InputCommand;
 
 public class SETCommand implements InputCommand {
     @Override
