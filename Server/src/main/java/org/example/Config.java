@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
-import org.example.Server.Messengers.MessageSenders.ServerSender;
+import org.example.Server.Messengers.Server.MessageSenders.ServerBroadcaster;
+import org.example.Server.Messengers.Server.MessageSenders.ServerSender;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
 import org.example.Server.UserManager.ActiveUsersManager;

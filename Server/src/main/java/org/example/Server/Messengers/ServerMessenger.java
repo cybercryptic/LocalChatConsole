@@ -1,8 +1,8 @@
 package org.example.Server.Messengers;
 
 import org.example.Server.Main.Server;
-import org.example.Server.Messengers.MessageSenders.ServerBroadcaster;
-import org.example.Server.Messengers.MessageSenders.ServerSender;
+import org.example.Server.Messengers.Server.MessageSenders.ServerBroadcaster;
+import org.example.Server.Messengers.Server.MessageSenders.ServerSender;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +18,7 @@ public class ServerMessenger {
 
     public void sendFromServerTo(int toId, String message) {
         var srvMessage = "{" + "Server" + "}: " + message;
-        sender.sendFromServerTo(toId, srvMessage);
+        sender.send(toId, srvMessage);
     }
 
     public void sendFromServerToEveryone(String message) {

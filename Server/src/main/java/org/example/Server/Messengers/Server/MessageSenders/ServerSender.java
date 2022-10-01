@@ -1,4 +1,4 @@
-package org.example.Server.Messengers.MessageSenders;
+package org.example.Server.Messengers.Server.MessageSenders;
 
 import org.example.Server.UserManager.ActiveUsersManager;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class ServerSender {
         this.userManager = userManager;
     }
 
-    public void sendFromServerTo(int toId, String message) {
+    public void send(int toId, String message) {
         if (!userManager.containsId(toId)) {
             System.out.println("Unknown user id: " + toId);
             return;

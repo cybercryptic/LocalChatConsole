@@ -1,4 +1,4 @@
-package org.example.Server.Messengers.MessageSenders;
+package org.example.Server.Messengers.Server.MessageSenders;
 
 import org.example.Server.UserManager.ActiveUsersManager;
 import org.springframework.stereotype.Component;
