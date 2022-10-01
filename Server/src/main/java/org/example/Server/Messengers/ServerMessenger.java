@@ -21,6 +21,11 @@ public class ServerMessenger {
         sender.sendFromServerTo(toId, srvMessage);
     }
 
+    public void sendFromServerToEveryone(String message) {
+        var srvMessage = "{" + "Server" + "}: " + message;
+        broadcaster.broadcast(srvMessage);
+    }
+
     public void broadcastToGroupUsers(int fromId, String username, String message) {
         var usrMessage = "[" + username + "]: " + message;
         broadcaster.broadcastExcept(usrMessage, fromId);
