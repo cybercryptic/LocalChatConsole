@@ -1,6 +1,10 @@
 package org.example.Server.Main.Writer;
 
 import org.example.Server.Main.Server;
+import org.example.Server.Main.Writer.Commands.CMDCommand;
+import org.example.Server.Main.Writer.Commands.HelpCommand;
+import org.example.Server.Main.Writer.Commands.SETCommand;
+import org.example.Server.Main.Writer.Commands.USRCommand;
 import org.example.Server.Messengers.ServerMessenger;
 import org.example.Server.Messengers.ServerNotifier;
 
@@ -19,27 +23,20 @@ public class CommandCenter {
         this.messenger = messenger;
     }
 
-    public void execute(String input) throws IOException {
+    public void execute(String input) {
         if (input.trim().isEmpty()) return;
 
-        var filteredInput = input.trim().split(" ", 3);
-        switch (filteredInput[0]) {
-            case "-u" -> sendMessage(filteredInput);
-            case "-c" -> executeCommand(filteredInput);
-            case "-h" -> printHelp();
+        var filteredInput = input.trim().split(" ", 2);
+        var command = filteredInput[0].trim().toLowerCase();
+        input = input.replace(command, "");
+
+        switch (command) {
+            case "usr" -> new USRCommand(messenger).execute(input);
+            case "set" -> new SETCommand().execute(input);
+            case "cmd" -> new CMDCommand().execute(input);
+            case "help" -> new HelpCommand().execute();
             default -> System.out.println("-h for help");
         }
-    }
-
-    private void printHelp() {
-        System.out.println("""
-                usr [id] [message]
-                set [property] [value]
-                cmd [command]
-                help Print help message & exit
-                """);
-
-        // TODO: Code these commands
     }
 
     private void executeCommand(String[] filteredInput) throws IOException {
@@ -60,17 +57,5 @@ public class CommandCenter {
     private void stopServer() throws IOException {
         notifier.notifyServerShutdownToUsers();
         server.stop();
-    }
-
-    private void sendMessage(String[] filteredInput) {
-        if (filteredInput.length != 3) {
-            System.out.println("Invalid message sending syntax");
-            System.out.println("-h for help");
-            return;
-        }
-
-        var id = Integer.parseInt(filteredInput[1]);
-        var message = filteredInput[2];
-        messenger.sendFromServerTo(id, message);
     }
 }

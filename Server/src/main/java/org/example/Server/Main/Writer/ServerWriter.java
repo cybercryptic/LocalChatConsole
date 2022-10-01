@@ -40,7 +40,7 @@ public class ServerWriter {
         buffReader.close();
     }
 
-    private void execute(String input) throws IOException {
+    private void execute(String input) {
         commandCenter.execute(input);
     }
 
