@@ -17,7 +17,7 @@ public class ChatServer {
     public void start(int port, int serverCapacity) throws IOException {
         server.start(port, serverCapacity);
 
-        server.startListener();
+        server.startSocketFactory();
         server.startWriter();
 
         waitUntilSessionEnds();
