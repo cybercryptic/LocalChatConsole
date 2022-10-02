@@ -24,7 +24,7 @@ public class SETCommand implements InputCommand {
         input = input.replace(property, "");
 
         switch (property) {
-            case "sc" -> setServerCapacity(Integer.parseInt(input));
+            case "sc" -> setServerCapacity(Integer.parseInt(input.trim()));
             case "help" -> showDetailedHelp();
             default -> showHelp();
         }

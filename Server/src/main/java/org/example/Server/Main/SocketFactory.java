@@ -45,6 +45,7 @@ public class SocketFactory {
 
     private boolean areUsersUnderCapacity() {
         var size = getSize();
+        System.out.println("Server size: " + server.getServerCapacity().get());
         return size < server.getServerCapacity().get();
     }
 
