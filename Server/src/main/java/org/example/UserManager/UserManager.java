@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class UserManager {
     private final ConnectedUsersManager connectedUsersManager;
     private final ActiveUsersManager activeUsersManager;
-    private final AtomicInteger noOfUsers = new AtomicInteger();
 
     public UserManager(ConnectedUsersManager connectedUsersManager, ActiveUsersManager activeUsersManager) {
         this.connectedUsersManager = connectedUsersManager;
@@ -38,11 +37,5 @@ public class UserManager {
 
     public AtomicInteger getActiveUsersSize() {
         return activeUsersManager.usersSize();
-    }
-
-    public AtomicInteger getNoOfUsers() {
-        int size = getConnectedUsersSize().get() + getActiveUsersSize().get();
-        noOfUsers.set(size);
-        return noOfUsers;
     }
 }
