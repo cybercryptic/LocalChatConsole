@@ -5,7 +5,7 @@ import org.example.Server.Main.Server;
 import org.example.Server.Writer.Commands.*;
 
 
-public class CommandCenter {
+public class CommandCenter extends InputCommand {
 
     private final Server server;
     private final ServerMessenger messenger;
@@ -18,9 +18,9 @@ public class CommandCenter {
     public void execute(String input) {
         if (input.trim().isEmpty()) return;
 
-        var filteredInput = input.trim().split(" ", 2);
-        var command = filteredInput[0].trim().toLowerCase();
-        input = input.replace(command, "");
+        var stringHolder = getFirstStringNRemove(input);
+        var command = stringHolder.firstString();
+        input = stringHolder.input();
 
         switch (command) {
             case "usr" -> new USRCommand(messenger).execute(input);

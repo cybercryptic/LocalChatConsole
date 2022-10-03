@@ -1,11 +1,8 @@
 package org.example.Server.Writer.Commands;
 
 import org.example.Server.Main.Server;
-import org.example.Server.Writer.Commands.Interfaces.InputCommand;
 
-import java.io.IOException;
-
-public class CMDCommand implements InputCommand {
+public class CMDCommand extends InputCommand {
 
     private final Server server;
 
@@ -16,30 +13,28 @@ public class CMDCommand implements InputCommand {
     @Override
     public void execute(String input) {
         if (input.isEmpty()) {
-            System.out.println("Invalid CMD Command syntax!");
-            showHelp();
+            printHelp();
             return;
         }
 
-        var filteredInput = input.trim().split(" ", 2);
-        var command = filteredInput[0].trim().toLowerCase();
-
-        if (command.equals("stop")) {
-            try {
-                stopServer();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            showHelp();
-        }
+        if (getFirstString(input).equals("stop")) stopServer();
+        else printHelp();
     }
 
-    private void stopServer() throws IOException {
-        server.stop();
+    private void stopServer() {
+        server.getSession().set(false);
     }
 
-    private void showHelp() {
-        System.out.println("Type \"help\" for help!");
+    private void printHelp() {
+        System.out.println("""
+                
+                CMD command usage
+                -----------------
+                cmd [command] {Executes server commands}
+                
+                Supported commands
+                ------------------
+                stop - Stops the server
+                """);
     }
 }

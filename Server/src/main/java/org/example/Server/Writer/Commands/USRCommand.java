@@ -1,9 +1,8 @@
 package org.example.Server.Writer.Commands;
 
 import org.example.Server.Communicators.ServerMessenger;
-import org.example.Server.Writer.Commands.Interfaces.InputCommand;
 
-public class USRCommand implements InputCommand {
+public class USRCommand extends InputCommand {
 
     private final ServerMessenger messenger;
 
@@ -14,23 +13,16 @@ public class USRCommand implements InputCommand {
     @Override
     public void execute(String input) {
         if (input.isEmpty()) {
-            System.out.println("Need Id or Message");
-            showHelp();
+            printHelp();
             return;
         }
 
-        var filteredInput = input.trim().split(" ", 2);
-        var option = filteredInput[0].trim().toLowerCase();
-        var message = input.replace(option, "").trim();
-
-        if (option.equals("help")) {
-            showDetailedHelp();
-            return;
-        }
+        var stringHolder = getFirstStringNRemove(input);
+        var id = stringHolder.firstString();
+        var message = stringHolder.input();
 
         try {
-            var id = Integer.parseInt(option);
-            sendToUser(id, message);
+            sendToUser(Integer.parseInt(id), message);
         } catch (Exception ex) {
             sendToEveryUser(input.trim());
         }
@@ -39,7 +31,6 @@ public class USRCommand implements InputCommand {
     private void sendToUser(int id, String message) {
         if (message.trim().isEmpty()) {
             System.out.println("Cannot send empty message!");
-            showHelp();
             return;
         }
 
@@ -49,25 +40,19 @@ public class USRCommand implements InputCommand {
     private void sendToEveryUser(String message) {
         if (message.trim().isEmpty()) {
             System.out.println("Cannot send empty message!");
-            showHelp();
             return;
         }
 
         messenger.sendFromServerToEveryone(message);
     }
 
-    private void showDetailedHelp() {
+    private void printHelp() {
         System.out.println("""
-                -----------------------------------------------------------------------------
-                Syntax: usr [id] [message] {Sends message to particular user with the id}
-                Example: usr 23 how are you
-                Syntax: usr [message] {Sends message to every active user}
-                Example: usr how are you
-                -----------------------------------------------------------------------------
+                
+                USR command usage
+                -----------------
+                usr [id] [message] {Sends a message to a specific user with id}
+                usr [message] {Sends a message to every active user}
                 """);
-    }
-
-    private void showHelp() {
-        System.out.println("Type \"help\" for help!");
     }
 }

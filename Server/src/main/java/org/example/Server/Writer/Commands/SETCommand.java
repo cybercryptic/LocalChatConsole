@@ -1,9 +1,8 @@
 package org.example.Server.Writer.Commands;
 
 import org.example.Server.Main.Server;
-import org.example.Server.Writer.Commands.Interfaces.InputCommand;
 
-public class SETCommand implements InputCommand {
+public class SETCommand extends InputCommand {
 
     private final Server server;
 
@@ -14,20 +13,31 @@ public class SETCommand implements InputCommand {
     @Override
     public void execute(String input) {
         if (input.isEmpty()) {
-            System.out.println("Invalid SET Command syntax!");
-            showHelp();
+            printHelp();
             return;
         }
 
-        var filteredInput = input.trim().split(" ", 2);
-        var property = filteredInput[0].trim().toLowerCase();
-        input = input.replace(property, "");
+        var stringHolder = getFirstStringNRemove(input);
+        var property = stringHolder.firstString();
+        input = stringHolder.input();
 
-        switch (property) {
-            case "sc" -> setServerCapacity(getScValue(input));
-            case "help" -> showDetailedHelp();
-            default -> showHelp();
+        if (property.equals("sc")) setServerCapacity(getScValue(input));
+        else printHelp();
+    }
+
+    private void setServerCapacity(int scValue) {
+        if (scValue < 0) {
+            System.out.println("Cannot set the value");
+            return;
         }
+
+        var atomicSC = server.getServerCapacity();
+        var prevSc = atomicSC.get();
+
+        atomicSC.set(scValue);
+        System.out.println("Changed server capacity " + prevSc + " -> " + scValue);
+        if (scValue <= prevSc)
+            System.out.println("Connected users won't be affected by this change");
     }
 
     private int getScValue(String input) {
@@ -41,42 +51,25 @@ public class SETCommand implements InputCommand {
         try {
             scValue = Integer.parseInt(trimmedInput);
         } catch (Exception ex) {
-            System.out.println("Value cannot be string");
+            System.out.println("Value cannot be a string");
             return -1;
         }
 
         return scValue;
     }
 
-    private void setServerCapacity(int scValue) {
-        if (scValue < 0) {
-            System.out.println("Cannot set the value");
-            return;
-        }
-
-        var scObj = server.getServerCapacity();
-        var prevSc = scObj.get();
-        if (prevSc == scValue) {
-            System.out.println("Value cannot be same");
-            return;
-        }
-
-        scObj.set(scValue);
-        System.out.println("Changed server capacity " + prevSc + " -> " + scValue);
-        if (scValue < prevSc)
-            System.out.println("Connected users won't be affected by this change");
-    }
-
-    private void showDetailedHelp() {
+    private void printHelp() {
         System.out.println("""
-                ------------------------------
-                Syntax: set [property] [value]
-                Example: set sc 5
-                ------------------------------
+                
+                SET command usage
+                -----------------
+                set [property] [value]
+                
+                Properties
+                ----------
+                sc - Server capacity [Takes number] {No of users can connect to server}
+                
+                Value - It means number or string depends upon property
                 """);
-    }
-
-    private void showHelp() {
-        System.out.println("Type \"help\" for help!");
     }
 }
