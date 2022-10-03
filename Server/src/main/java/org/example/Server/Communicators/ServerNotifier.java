@@ -14,8 +14,9 @@ public class ServerNotifier {
     }
 
     public void notifyServerShutdownToUsers() {
-        var srvMessage = "{Server}: is offline";
+        var srvMessage = "{Server will be going offline soon}";
         broadcaster.broadcast(srvMessage);
+        broadcaster.broadcast("stop"); // TODO:: Need to be changed.
         Server.console.print("Server shutdown successfully");
     }
 
