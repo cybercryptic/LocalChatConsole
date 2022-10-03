@@ -3,10 +3,7 @@ package org.example.Server.Writer;
 import org.example.Server.Communicators.ServerMessenger;
 import org.example.Server.Communicators.ServerNotifier;
 import org.example.Server.Main.Server;
-import org.example.Server.Writer.Commands.CMDCommand;
-import org.example.Server.Writer.Commands.HelpCommand;
-import org.example.Server.Writer.Commands.SETCommand;
-import org.example.Server.Writer.Commands.USRCommand;
+import org.example.Server.Writer.Commands.*;
 
 import java.io.IOException;
 
@@ -33,6 +30,7 @@ public class CommandCenter {
         switch (command) {
             case "usr" -> new USRCommand(messenger).execute(input);
             case "set" -> new SETCommand(server).execute(input);
+            case "show" -> new ShowCommand(server).execute(input);
             case "cmd" -> new CMDCommand().execute(input);
             case "help" -> new HelpCommand().execute();
             default -> System.out.println("-h for help");
