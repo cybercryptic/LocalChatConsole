@@ -1,21 +1,19 @@
-# Local Chat Console Application V2
-Server can connect to multiple clients and responsively send & receive messages.
+# Local Chat Console Application V3
+A local group chat application
+## Features
+1. Local group chat
+2. Responsive chatting
 ## How to run
 1. Download [java 18](https://www.oracle.com/java/technologies/downloads/) and install.
-2. Download [Server](https://github.com/cybercryptic/LocalChatConsoleApplication/releases/download/Stable/Server.jar) and start it.
+2. Download Server.jar from the latest release.
+3. Download Client.jar from the latest release.
+4. Now start both like below.
 > java -jar Server.jar [Port] [Server capacity]
-3. Download [Client](https://github.com/cybercryptic/LocalChatConsoleApplication/releases/download/Stable/Client.jar) and start it.
 > java -jar Client.jar [Server host] [Port]
 ## How to use
 #### Server
-```
-To send message
--u [id] [message]
-Ex: -u 32 hi
-To stop
--c [command]
-Ex: -c stop
-```
+Introduced new commands.
+Just type "Help", the application will guide.
 #### Client
 ```
 To send message
