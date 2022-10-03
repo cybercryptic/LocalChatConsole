@@ -21,14 +21,16 @@ public class Server {
 
     private final SocketFactory socketFactory;
     private final ServerWriter writer;
+    private final ServerNotifier notifier;
 
     public final static Console console = new Console();
 
     public Server(UserManager userManager, UserHandler userHandler, ServerNotifier notifier,
                   ServerMessenger messenger) {
         this.socketFactory = new SocketFactory(this, userManager, userHandler);
-        var commandCenter = new CommandCenter(this, notifier, messenger);
+        var commandCenter = new CommandCenter(this, messenger);
         this.writer = new ServerWriter(this, commandCenter);
+        this.notifier = notifier;
     }
 
     public void start(int port, int serverCapacity) throws IOException {
@@ -49,6 +51,7 @@ public class Server {
 
     public void stop() throws IOException {
         server.close();
+        notifier.notifyServerShutdownToUsers();
     }
 
     protected ServerSocket getServer() {
