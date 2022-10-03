@@ -8,7 +8,7 @@ A local group chat application
 2. Download Server.jar from the latest release.
 3. Download Client.jar from the latest release.
 4. Now start both like below.
-> java -jar Server.jar [Port] [Server capacity]
+> java -jar Server.jar [Port] [Server capacity] <br />
 > java -jar Client.jar [Server host] [Port]
 ## How to use
 #### Server
