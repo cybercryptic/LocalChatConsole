@@ -15,7 +15,7 @@ public class Client {
     public Client(String host, int port) throws IOException {
         setServer(host, port);
         receiver = new ClientReceiver(this, new ReceiverCommandCenter(this));
-        writer = new ClientWriter(this);
+        writer = new ClientWriter(this, new WriterHandler());
         start();
     }
 
