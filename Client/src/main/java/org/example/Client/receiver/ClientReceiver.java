@@ -1,4 +1,6 @@
-package org.example.Client;
+package org.example.Client.receiver;
+
+import org.example.Client.Client;
 
 import java.io.DataInputStream;
 import java.io.IOException;

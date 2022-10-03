@@ -1,4 +1,4 @@
-package org.example.Client;
+package org.example.Client.writer;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

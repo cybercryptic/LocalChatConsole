@@ -1,5 +1,10 @@
 package org.example.Client;
 
+import org.example.Client.receiver.ClientReceiver;
+import org.example.Client.receiver.ReceiverCommandCenter;
+import org.example.Client.writer.ClientWriter;
+import org.example.Client.writer.WriterHandler;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
