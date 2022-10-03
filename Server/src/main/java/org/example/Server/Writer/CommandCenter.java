@@ -1,22 +1,17 @@
 package org.example.Server.Writer;
 
 import org.example.Server.Communicators.ServerMessenger;
-import org.example.Server.Communicators.ServerNotifier;
 import org.example.Server.Main.Server;
 import org.example.Server.Writer.Commands.*;
-
-import java.io.IOException;
 
 
 public class CommandCenter {
 
     private final Server server;
-    private final ServerNotifier notifier;
     private final ServerMessenger messenger;
 
-    public CommandCenter(Server server, ServerNotifier notifier, ServerMessenger messenger) {
+    public CommandCenter(Server server, ServerMessenger messenger) {
         this.server = server;
-        this.notifier = notifier;
         this.messenger = messenger;
     }
 
@@ -31,14 +26,9 @@ public class CommandCenter {
             case "usr" -> new USRCommand(messenger).execute(input);
             case "set" -> new SETCommand(server).execute(input);
             case "show" -> new ShowCommand(server).execute(input);
-            case "cmd" -> new CMDCommand().execute(input);
+            case "cmd" -> new CMDCommand(server).execute(input);
             case "help" -> new HelpCommand().execute();
-            default -> System.out.println("-h for help");
+            default -> System.out.println("Type \"help\" for help!");
         }
-    }
-
-    private void stopServer() throws IOException {
-        notifier.notifyServerShutdownToUsers();
-        server.stop();
     }
 }
