@@ -1,7 +1,11 @@
-package org.example.Server;
+package org.example;
+
+import org.example.Server.Main.Server;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class ChatServer {
 
     private final Server server;
@@ -13,7 +17,7 @@ public class ChatServer {
     public void start(int port, int serverCapacity) throws IOException {
         server.start(port, serverCapacity);
 
-        server.startListener();
+        server.startSocketFactory();
         server.startWriter();
 
         waitUntilSessionEnds();

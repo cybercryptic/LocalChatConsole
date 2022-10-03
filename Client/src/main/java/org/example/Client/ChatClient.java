@@ -9,17 +9,14 @@ public class ChatClient {
         this.client = client;
     }
 
-    public void start(String host, int port) throws IOException {
-        client.start(host, port);
-        client.startListener();
-        client.startWriter();
+    public void start() throws IOException {
+        client.receiver.startReceivingAsync();
+        client.writer.startAsync();
 
         waitUntilSessionEnds();
 
         client.stop();
     }
-
-
 
     private void waitUntilSessionEnds() {
         while (client.getSession().get()) waitFor5s();

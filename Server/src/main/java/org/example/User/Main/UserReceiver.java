@@ -1,4 +1,6 @@
-package org.example.User;
+package org.example.User.Main;
+
+import org.example.User.Interfaces.URHandler;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -8,10 +10,15 @@ public class UserReceiver {
 
     private final User user;
     private final int id;
+    private final DataInputStream dis;
+    private final URHandler handler;
 
-    public UserReceiver(User user) {
+    public UserReceiver(User user, URHandler URHandler) throws IOException {
         this.user = user;
         id = user.getId();
+        dis = getDis();
+
+        this.handler = URHandler;
     }
 
     public void startAsync() {
@@ -25,11 +32,6 @@ public class UserReceiver {
     }
 
     private void start() throws IOException {
-        var dis = getDis();
-
-        var username = dis.readUTF();
-        setUsernameNNotify(username);
-
         var message = "";
         while (true) {
             message = dis.readUTF();
@@ -37,15 +39,14 @@ public class UserReceiver {
                 user.stop();
                 break;
             }
-            System.out.println(id + "> " + username + ": " + message);
+            handler.broadcastToGroupUsers(id, user.getUsername(), message);
         }
 
         dis.close();
     }
 
-    private void setUsernameNNotify(String username) {
-        user.setUsername(username);
-        System.out.println(id + "> " + username + " connected");
+    public String getUsername() throws IOException {
+        return dis.readUTF();
     }
 
     private DataInputStream getDis() throws IOException {

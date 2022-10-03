@@ -1,5 +1,10 @@
 package org.example.Client;
 
+import org.example.Client.receiver.ClientReceiver;
+import org.example.Client.receiver.ReceiverCommandCenter;
+import org.example.Client.writer.ClientWriter;
+import org.example.Client.writer.WriterHandler;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -8,39 +13,35 @@ public class Client {
 
     private Socket socket;
     private final AtomicBoolean session = new AtomicBoolean();
-    private ClientListener listener;
-    private ClientWriter writer;
+    public final ClientReceiver receiver;
+    public final ClientWriter writer;
+    public static final Console console = new Console();
 
-    public Client() {
-        initiateHelpers();
+    public Client(String host, int port) throws IOException {
+        setServer(host, port);
+        receiver = new ClientReceiver(this, new ReceiverCommandCenter(this));
+        writer = new ClientWriter(this, new WriterHandler());
+        start();
     }
 
-    public void start(String host, int port) {
-        System.out.println("Connecting to Server host: " + host + " Port: " + port);
-        socket = connectToServerWith(host, port);
+    private void start() throws IOException {
+        if (!receiver.isRequestAccepted())
+            System.out.println("Server might be busy!! Cannot connect.\nTry Again later...");
+
         session.set(true);
         System.out.println("Connected to server successfully");
     }
 
-    public void startListener() {
-        listener.startAsync();
-    }
-
-    public void startWriter() {
-        writer.startAsync();
-    }
-
     public void stop() throws IOException {
-        session.set(false);
         socket.close();
 
         System.out.println("Closed successfully");
     }
 
-
-    private void initiateHelpers() {
-        listener = new ClientListener(this);
-        writer = new ClientWriter(this);
+    private void setServer(String host, int port) {
+        System.out.println("Connecting to Server host: " + host + " Port: " + port);
+        System.out.println("CTRL + C to stop");
+        socket = connectToServerWith(host, port);
     }
 
     private Socket connectToServerWith(String host, int port) {

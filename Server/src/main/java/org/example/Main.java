@@ -1,7 +1,8 @@
 package org.example;
 
-import org.example.Server.ChatServer;
-import org.example.Server.Server;
+import org.example.Server.Main.Server;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 
@@ -14,8 +15,9 @@ public class Main {
 
         var port = Integer.parseInt(args[0]);
         var serverCapacity = Integer.parseInt(args[1]);
-
-        var server = new ChatServer(new Server());
-        server.start(port, serverCapacity);
+        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        var server = context.getBean(Server.class);
+        var chatServer = new ChatServer(server);
+        chatServer.start(port, serverCapacity);
     }
 }

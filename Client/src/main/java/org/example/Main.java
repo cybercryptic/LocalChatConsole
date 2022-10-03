@@ -15,7 +15,8 @@ public class Main {
         var host = args[0];
         var port = Integer.parseInt(args[1]);
 
-        var client = new ChatClient(new Client());
-        client.start(host, port);
+        var client = new Client(host, port);
+        var chatClient = new ChatClient(client);
+        chatClient.start();
     }
 }

@@ -1,4 +1,6 @@
-package org.example.Server;
+package org.example.Server.Writer;
+
+import org.example.Server.Main.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,9 +10,11 @@ import java.util.concurrent.CompletableFuture;
 public class ServerWriter {
 
     private final Server server;
+    private final CommandCenter commandCenter;
 
-    public ServerWriter(Server server) {
+    public ServerWriter(Server server, CommandCenter commandCenter) {
         this.server = server;
+        this.commandCenter = commandCenter;
     }
 
 
@@ -36,8 +40,8 @@ public class ServerWriter {
         buffReader.close();
     }
 
-    private void execute(String input) throws IOException {
-        server.actionCenter.execute(input);
+    private void execute(String input) {
+        commandCenter.execute(input);
     }
 
     private BufferedReader getBufferedReader() {

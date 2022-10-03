@@ -1,4 +1,6 @@
-package org.example.Client;
+package org.example.Client.writer;
+
+import org.example.Client.Client;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -8,11 +10,16 @@ import java.util.concurrent.CompletableFuture;
 
 public class ClientWriter {
 
+    private final DataOutputStream dos;
+    private final BufferedReader buffReader;
     private final Client client;
-    private DataOutputStream dos;
+    private final WriterHandler handler;
 
-    public ClientWriter(Client client) {
+    public ClientWriter(Client client, WriterHandler handler) throws IOException {
         this.client = client;
+        this.handler = handler;
+        buffReader = getBuffReader();
+        dos = getDos();
     }
 
     public void startAsync() {
@@ -26,10 +33,8 @@ public class ClientWriter {
     }
 
     private void start() throws IOException {
-        dos = getDos();
-        var buffReader = getBuffReader();
-
-        sendUsernameToServer(buffReader);
+        if (client.getSession().get())
+            handler.sendUsernameToServer(buffReader, dos);
 
         var message = "";
         while (client.getSession().get()) {
@@ -41,14 +46,10 @@ public class ClientWriter {
         dos.close();
         buffReader.close();
     }
+
     private void sendMessage(String message) throws IOException {
         dos.writeUTF(message);
         dos.flush();
-    }
-
-    private void sendUsernameToServer(BufferedReader buffReader) throws IOException {
-        System.out.print("Enter your username: ");
-        sendMessage(buffReader.readLine());
     }
 
 
